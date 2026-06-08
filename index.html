@@ -1,993 +1,136 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chapter 22 Options and Corporate Finance - 題庫複習</title>
-<style>
-:root {
-  --bg:#f6f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --line:#e5e7eb;
-  --accent:#2563eb; --flag:#ef4444; --flagbg:#fff1f2; --soft:#f8fafc;
-}
-* { box-sizing: border-box; }
-body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.55; }
-header { padding:28px 24px 18px; background:linear-gradient(180deg,#ffffff,#f8fafc); border-bottom:1px solid var(--line); }
-.container { max-width:1180px; margin:0 auto; }
-h1 { margin:0 0 8px; font-size:28px; letter-spacing:.2px; }
-.subtitle { color:var(--muted); margin:0 0 14px; }
-.notice { background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; padding:12px 14px; border-radius:12px; margin:14px 0 0; }
-.toolbar { position:sticky; top:0; z-index:10; background:rgba(246,247,251,.92); backdrop-filter: blur(8px); border-bottom:1px solid var(--line); }
-.toolbar-inner { max-width:1180px; margin:0 auto; padding:12px 24px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-.tab { border:1px solid var(--line); background:#fff; color:var(--text); padding:8px 14px; border-radius:999px; cursor:pointer; font-weight:650; }
-.tab.active { background:var(--accent); border-color:var(--accent); color:white; }
-.counter { margin-left:auto; color:var(--muted); font-weight:650; }
-.search { min-width:220px; flex:0 1 320px; border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:#fff; }
-main { padding:20px 24px 48px; }
-.q-list { display:flex; flex-direction:column; gap:14px; }
-.q-card { display:grid; grid-template-columns:48px 56px minmax(128px, 180px) 1fr; gap:14px; align-items:start; background:var(--card); border:1px solid var(--line); border-left:5px solid transparent; border-radius:16px; padding:16px; box-shadow:0 1px 2px rgba(15,23,42,.04); transition:.15s ease; }
-.q-card:hover { box-shadow:0 10px 24px rgba(15,23,42,.08); border-color:#cbd5e1; }
-.q-card.marked { border-left-color:var(--flag); background:linear-gradient(90deg,var(--flagbg),#fff 18%); }
-.flag-btn { width:38px; height:38px; border-radius:12px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:22px; color:#94a3b8; }
-.q-card.marked .flag-btn { color:var(--flag); background:#ffe4e6; border-color:#fecdd3; }
-.q-num { font-size:22px; font-weight:800; color:#111827; line-height:38px; text-align:center; }
-.answer-cell { min-height:38px; background:#fff; color:#fff; border:1px dashed #e5e7eb; border-radius:12px; padding:9px 11px; font-weight:700; user-select:text; }
-.answer-cell span::selection { background:#bfdbfe; color:#111827; }
-.q-card:hover .answer-cell, .q-card.reveal .answer-cell { background:#fffbea; color:#111827; border-color:#fde68a; }
-.q-head { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-.page-ref { color:var(--muted); font-size:12px; background:var(--soft); border:1px solid var(--line); padding:2px 8px; border-radius:999px; }
-.flag-tag { display:none; color:#b91c1c; background:#fee2e2; border:1px solid #fecaca; font-size:12px; padding:2px 8px; border-radius:999px; font-weight:700; }
-.q-card.marked .flag-tag { display:inline-block; }
-.stem { font-size:16px; margin-bottom:10px; }
-.choices { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 12px; }
-.choice { display:flex; gap:8px; background:#f8fafc; border:1px solid #eef2f7; padding:9px 10px; border-radius:10px; }
-.choice-label { flex:0 0 auto; font-weight:800; color:#334155; }
-.meta { margin-top:10px; color:var(--muted); font-size:13px; }
-.meta summary { cursor:pointer; }
-.meta pre { white-space:pre-wrap; background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:10px; overflow:auto; }
-.empty { display:none; text-align:center; color:var(--muted); padding:42px; background:#fff; border:1px dashed var(--line); border-radius:16px; }
-footer { color:var(--muted); font-size:13px; padding:0 24px 32px; }
-@media (max-width: 850px) {
-  .q-card { grid-template-columns:44px 48px 1fr; }
-  .answer-cell { grid-column:3; grid-row:2; }
-  .q-main { grid-column:1 / -1; }
-  .choices { grid-template-columns:1fr; }
-  .counter { margin-left:0; width:100%; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司理財 題庫自主複習系統</title>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            /* 專業商務深藍 */
+            --accent-color: #a94442;
+            /* 你原本的質感深紅 */
+            --bg-color: #f4f6f9;
+            /* 舒服的淺灰背景 */
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, 'Microsoft JhengHei', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 中央主要容器 */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 標題下方小裝飾線 */
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            margin-left: 15px;
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+        }
+
+        /* 將超連結改造成卡片按鈕 */
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        }
+
+        /* 滑鼠懸停效果 */
+        a:hover {
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2b4c7e; 100%);
+            border-left-color: var(--accent-color);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(26, 54, 93, 0.2);
+        }
+
+        /* 頁尾微調 */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+        }
+    </style>
 </head>
+
 <body>
-<header>
-  <div class="container">
-    <h1>Corporate Finance, 12e (Ross) - Chapter 22 題庫複習</h1>
-    <p class="subtitle">Chapter 22: Options and Corporate Finance｜來源檔案：ch22.pdf｜共擷取 54 題。</p>
-    <div class="notice"><strong>題號完整性檢查：</strong>本 HTML 已納入 PDF 文字中可辨識的全部題號：1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 52, 53, 54, 55, 56, 57, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 99, 100, 104, 105。來源 PDF 本身跳號，未出現在檔案中的題號為：26-51, 58-59, 79-98, 101-103。</div>
-  </div>
-</header>
-<nav class="toolbar">
-  <div class="toolbar-inner">
-    <button class="tab active" data-filter="all">全部題目</button>
-    <button class="tab" data-filter="marked">已標記</button>
-    <input class="search" id="search" placeholder="搜尋題目、選項或答案...">
-    <div class="counter">已標記 <span id="markedCount">0</span> / 54 題</div>
-  </div>
-</nav>
-<main class="container">
-  <div class="q-list" id="qList">
-    
-    <article class="q-card" data-q="1" id="q1">
-      <button class="flag-btn" type="button" aria-label="標記第 1 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">1</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.1</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">A financial contract that provides its owner with the right, but not the obligation, to buy or sell<br>a specified asset at an agreed-upon price on or before a given future date is called a(n) ________<br>contract.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>option</span></div><div class='choice'><span class='choice-label'>B)</span><span>futures</span></div><div class='choice'><span class='choice-label'>C)</span><span>forward</span></div><div class='choice'><span class='choice-label'>D)</span><span>swap</span></div><div class='choice'><span class='choice-label'>E)</span><span>straddle</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="2" id="q2">
-      <button class="flag-btn" type="button" aria-label="標記第 2 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">2</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.1</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The act where an owner of an option buys or sells the underlying asset, as is his right, is called<br>________ the option.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>striking</span></div><div class='choice'><span class='choice-label'>B)</span><span>exercising</span></div><div class='choice'><span class='choice-label'>C)</span><span>opening</span></div><div class='choice'><span class='choice-label'>D)</span><span>splitting</span></div><div class='choice'><span class='choice-label'>E)</span><span>strangling</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="3" id="q3">
-      <button class="flag-btn" type="button" aria-label="標記第 3 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">3</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.2</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The fixed price in an option contract at which the owner can buy or sell the underlying asset is<br>called the option&#x27;s:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>opening price.</span></div><div class='choice'><span class='choice-label'>B)</span><span>intrinsic value.</span></div><div class='choice'><span class='choice-label'>C)</span><span>strike price.</span></div><div class='choice'><span class='choice-label'>D)</span><span>market price.</span></div><div class='choice'><span class='choice-label'>E)</span><span>time value.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="4" id="q4">
-      <button class="flag-btn" type="button" aria-label="標記第 4 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">4</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.2</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The last day on which an owner of an option can elect to exercise that option is referred to as<br>the ________ date.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>ex-payment</span></div><div class='choice'><span class='choice-label'>B)</span><span>ex-option</span></div><div class='choice'><span class='choice-label'>C)</span><span>opening</span></div><div class='choice'><span class='choice-label'>D)</span><span>expiration</span></div><div class='choice'><span class='choice-label'>E)</span><span>intrinsic</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="5" id="q5">
-      <button class="flag-btn" type="button" aria-label="標記第 5 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">5</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.2</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">An option that may be exercised only on the expiration date is called a(n) ________ option.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>European</span></div><div class='choice'><span class='choice-label'>B)</span><span>American</span></div><div class='choice'><span class='choice-label'>C)</span><span>Bermudian</span></div><div class='choice'><span class='choice-label'>D)</span><span>futures</span></div><div class='choice'><span class='choice-label'>E)</span><span>Asian</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="6" id="q6">
-      <button class="flag-btn" type="button" aria-label="標記第 6 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">6</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.3</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The difference between an American option and a European option is that the American<br>option:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>has a fixed exercise price while the European exercise price can vary within a small range.</span></div><div class='choice'><span class='choice-label'>B)</span><span>is a right to buy while a European option is an obligation to buy.</span></div><div class='choice'><span class='choice-label'>C)</span><span>has an expiration date while the European option does not.</span></div><div class='choice'><span class='choice-label'>D)</span><span>is written on 100 shares of the underlying security while the European option covers 1,000<br>shares.</span></div><div class='choice'><span class='choice-label'>E)</span><span>can be exercised at any time up to the expiration date while the European option can only be<br>exercised on the expiration date.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="7" id="q7">
-      <button class="flag-btn" type="button" aria-label="標記第 7 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">7</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.3</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">An option that may be exercised at any time up to and including its expiration date is called<br>a(n) ________ option.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>futures</span></div><div class='choice'><span class='choice-label'>B)</span><span>Asian</span></div><div class='choice'><span class='choice-label'>C)</span><span>Bermudian</span></div><div class='choice'><span class='choice-label'>D)</span><span>European</span></div><div class='choice'><span class='choice-label'>E)</span><span>American</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.1 Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="8" id="q8">
-      <button class="flag-btn" type="button" aria-label="標記第 8 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">8</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.4</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">If a call option has a positive intrinsic value at expiration the call is said to be:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>funded.</span></div><div class='choice'><span class='choice-label'>B)</span><span>unfunded.</span></div><div class='choice'><span class='choice-label'>C)</span><span>at the money.</span></div><div class='choice'><span class='choice-label'>D)</span><span>in the money.</span></div><div class='choice'><span class='choice-label'>E)</span><span>out of the money.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option valuation fundamentals
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="9" id="q9">
-      <button class="flag-btn" type="button" aria-label="標記第 9 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">9</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.4</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">A ________ is a derivative security that gives the owner the right, but not the obligation, to<br>buy an asset at a fixed price for a specified period of time.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>futures contract</span></div><div class='choice'><span class='choice-label'>B)</span><span>call option</span></div><div class='choice'><span class='choice-label'>C)</span><span>put option</span></div><div class='choice'><span class='choice-label'>D)</span><span>swap</span></div><div class='choice'><span class='choice-label'>E)</span><span>forward contract</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="10" id="q10">
-      <button class="flag-btn" type="button" aria-label="標記第 10 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">10</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.4</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">If you are the owner of a European call option, you:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>are obligated to buy the specified assets prior to the option&#x27;s expiration.</span></div><div class='choice'><span class='choice-label'>B)</span><span>have the right to sell the specified assets at the set price at any time up to and including on the<br>expiration date.</span></div><div class='choice'><span class='choice-label'>C)</span><span>have the right to buy the specified assets at the set price only on the expiration date.</span></div><div class='choice'><span class='choice-label'>D)</span><span>are obligated to sell the specified assets at the set price if the option is exercised.</span></div><div class='choice'><span class='choice-label'>E)</span><span>have the right to buy the specified assets at the set price at any time prior to the option&#x27;s<br>expiration.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option types and features
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="11" id="q11">
-      <button class="flag-btn" type="button" aria-label="標記第 11 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">11</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.5</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Which of these will increase the value of a call option?<br><br>I.<br>An increase in the market value of the underlying asset<br><br>II.<br>An increase in the option&#x27;s strike price<br><br>III.<br>A decrease in the market value of the underlying asset<br><br>IV.<br>A decrease in the option&#x27;s strike price</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>I and II only</span></div><div class='choice'><span class='choice-label'>B)</span><span>II only</span></div><div class='choice'><span class='choice-label'>C)</span><span>II and III only</span></div><div class='choice'><span class='choice-label'>D)</span><span>I and IV only</span></div><div class='choice'><span class='choice-label'>E)</span><span>I only</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="12" id="q12">
-      <button class="flag-btn" type="button" aria-label="標記第 12 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">12</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.5</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">An out-of-the-money call option is best defined as an option that:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>has an exercise price below the current market price of the underlying security.</span></div><div class='choice'><span class='choice-label'>B)</span><span>should not be exercised at this time.</span></div><div class='choice'><span class='choice-label'>C)</span><span>has an exercise price equal to the current market price of the underlying security.</span></div><div class='choice'><span class='choice-label'>D)</span><span>has expired.</span></div><div class='choice'><span class='choice-label'>E)</span><span>qualifies as an American option.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option valuation fundamentals
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="13" id="q13">
-      <button class="flag-btn" type="button" aria-label="標記第 13 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">13</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.6</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Jillian owns a call option on WAN stock with a strike price of $20 a share. Currently, WAN<br>is selling for $24.50 a share. Jillian would like to profit on this option but is not permitted to<br>exercise the option for another two weeks. She believes the stock will decline in value before the<br>two weeks is up. What should she do?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>Sell her option today</span></div><div class='choice'><span class='choice-label'>B)</span><span>Place an order to exercise her option on its expiration date</span></div><div class='choice'><span class='choice-label'>C)</span><span>Purchase an additional call option on WAN today with a strike price of $20</span></div><div class='choice'><span class='choice-label'>D)</span><span>Place an order to exercise her option as soon as she is permitted to do so</span></div><div class='choice'><span class='choice-label'>E)</span><span>Convert her American option into a European option</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.2 Call Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="14" id="q14">
-      <button class="flag-btn" type="button" aria-label="標記第 14 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">14</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.6</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The owner of a European put option has the:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>right, but not the obligation, to sell the underlying asset at the specified price only on the<br>specified date.</span></div><div class='choice'><span class='choice-label'>B)</span><span>right, but not the obligation, to sell the underlying asset at the specified price during a<br>specified period of time.</span></div><div class='choice'><span class='choice-label'>C)</span><span>obligation to sell the underlying asset on the specified date, but only if they can do so at the<br>specified price.</span></div><div class='choice'><span class='choice-label'>D)</span><span>obligation to buy the underlying asset sometime during the specified period at the specified<br>price.</span></div><div class='choice'><span class='choice-label'>E)</span><span>right, but not the obligation, to buy the underlying asset at the exercise price on the expiration<br>date.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option types and features
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="15" id="q15">
-      <button class="flag-btn" type="button" aria-label="標記第 15 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">15</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.7</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">An option that grants the right, but not the obligation, to sell shares of the underlying asset<br>during a particular time period at a specified price is called:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>either an American or a European option.</span></div><div class='choice'><span class='choice-label'>B)</span><span>an American call option.</span></div><div class='choice'><span class='choice-label'>C)</span><span>an American put option.</span></div><div class='choice'><span class='choice-label'>D)</span><span>a European put option.</span></div><div class='choice'><span class='choice-label'>E)</span><span>a European call option.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="16" id="q16">
-      <button class="flag-btn" type="button" aria-label="標記第 16 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">16</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.7</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Which one of the following provides the right to sell a stock anytime during the option<br>period at the strike price even if the market price of the stock declines to zero?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>American call</span></div><div class='choice'><span class='choice-label'>B)</span><span>European call</span></div><div class='choice'><span class='choice-label'>C)</span><span>American put</span></div><div class='choice'><span class='choice-label'>D)</span><span>European put</span></div><div class='choice'><span class='choice-label'>E)</span><span>Should the underlying stock price decline to zero, all options are null and void.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option types and features
-Bloom&#x27;s:  Remember
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="17" id="q17">
-      <button class="flag-btn" type="button" aria-label="標記第 17 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">17</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.8</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Which of these will decrease the value of a put option?<br><br>I.<br>An increase in the market value of the underlying asset<br><br>II. An increase in the option&#x27;s strike price<br><br>III. A decrease in the market value of the underlying asset<br><br>IV. A decrease in the option&#x27;s strike price</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>I and II only</span></div><div class='choice'><span class='choice-label'>B)</span><span>I and IV only</span></div><div class='choice'><span class='choice-label'>C)</span><span>II and III only</span></div><div class='choice'><span class='choice-label'>D)</span><span>III only</span></div><div class='choice'><span class='choice-label'>E)</span><span>IV only</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="18" id="q18">
-      <button class="flag-btn" type="button" aria-label="標記第 18 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">18</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.8</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">An in-the-money put option is one that:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>has an exercise price greater than the underlying stock price.</span></div><div class='choice'><span class='choice-label'>B)</span><span>has an exercise price less than the underlying stock price.</span></div><div class='choice'><span class='choice-label'>C)</span><span>expires today.</span></div><div class='choice'><span class='choice-label'>D)</span><span>should not be exercised at expiration.</span></div><div class='choice'><span class='choice-label'>E)</span><span>should not be exercised at any time.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="19" id="q19">
-      <button class="flag-btn" type="button" aria-label="標記第 19 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">19</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.9</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">On the expiration day, the maximum price of a put option on a stock is the greater of the:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>stock price minus the exercise price, or 0.</span></div><div class='choice'><span class='choice-label'>B)</span><span>the exercise price or 0.</span></div><div class='choice'><span class='choice-label'>C)</span><span>exercise price minus the stock price, or 0.</span></div><div class='choice'><span class='choice-label'>D)</span><span>stock price or 0.</span></div><div class='choice'><span class='choice-label'>E)</span><span>exercise price or the stock price.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option valuation fundamentals
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="20" id="q20">
-      <button class="flag-btn" type="button" aria-label="標記第 20 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">20</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.9</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Jeff owns an American put option on 100 shares of ABC stock. The option has a strike price<br>of $32.50 and a September expiration date. The stock has recently been declining in value,<br>currently sells for $27.65 per share, and is expected to continue declining in value. Ignore all<br>costs and taxes. If today is Wednesday, August 14, he:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>cannot exercise his option even though he would like to do so.</span></div><div class='choice'><span class='choice-label'>B)</span><span>should hold his option until September.</span></div><div class='choice'><span class='choice-label'>C)</span><span>can exercise his option and earn a profit.</span></div><div class='choice'><span class='choice-label'>D)</span><span>should exercise his option today and then sell the shares of stock on the September expiration<br>date.</span></div><div class='choice'><span class='choice-label'>E)</span><span>should let his option expire unless the stock price increases above $32.50 a share.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option valuation fundamentals
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="21" id="q21">
-      <button class="flag-btn" type="button" aria-label="標記第 21 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">21</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.10</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">A put option on ABC stock with an exercise price of $35 expires today. The current price of<br>ABC stock is $36. The put is:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>funded.</span></div><div class='choice'><span class='choice-label'>B)</span><span>unfunded.</span></div><div class='choice'><span class='choice-label'>C)</span><span>at the money.</span></div><div class='choice'><span class='choice-label'>D)</span><span>in the money.</span></div><div class='choice'><span class='choice-label'>E)</span><span>out of the money.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.3 Put Options
-Topic:  Option valuation fundamentals
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="22" id="q22">
-      <button class="flag-btn" type="button" aria-label="標記第 22 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">22</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.10</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Which one of the following statements concerning call option writers is true?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>Call option writers promise to purchase shares if the call option is exercised.</span></div><div class='choice'><span class='choice-label'>B)</span><span>The call option writer has the option, but not the obligation, to purchase shares if the option is<br>exercised.</span></div><div class='choice'><span class='choice-label'>C)</span><span>The call option writer is betting that the market price of the underlying asset will increase.</span></div><div class='choice'><span class='choice-label'>D)</span><span>The call option writer receives a cash payment when the option is written.</span></div><div class='choice'><span class='choice-label'>E)</span><span>The call option writer earns a profit when an in-the-money option is exercised.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.4 Selling Options
-Topic:  Option types and features
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="23" id="q23">
-      <button class="flag-btn" type="button" aria-label="標記第 23 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">23</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.11</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Eric has an option position on Langdon stock that results in a zero dollar payoff when the<br>stock price is equal to or greater than the option strike price. What did he do to obtain this<br>position?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>Purchased a call option</span></div><div class='choice'><span class='choice-label'>B)</span><span>Purchased a put option</span></div><div class='choice'><span class='choice-label'>C)</span><span>Wrote a call option</span></div><div class='choice'><span class='choice-label'>D)</span><span>Wrote a put option</span></div><div class='choice'><span class='choice-label'>E)</span><span>No option position would have this result.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.4 Selling Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="24" id="q24">
-      <button class="flag-btn" type="button" aria-label="標記第 24 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">24</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.11</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Assume you are reviewing a table that lists the current stock option contracts and quotes.<br>Which one of these statements would correctly apply to that table?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>If you write a contract you will pay the bid price per share listed in the table.</span></div><div class='choice'><span class='choice-label'>B)</span><span>If you write a contract you will receive the difference between the bid and ask prices per<br>share.</span></div><div class='choice'><span class='choice-label'>C)</span><span>The bid price on a specific contract will be higher than the ask price on that same contract.</span></div><div class='choice'><span class='choice-label'>D)</span><span>To purchase one contract you must pay 1000 times the quoted bid price shown in the table.</span></div><div class='choice'><span class='choice-label'>E)</span><span>To purchase one contract you must pay 100 times the quoted ask price shown in the table.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.5 Option Quotes
-Topic:  Option contracts and quotes
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="25" id="q25">
-      <button class="flag-btn" type="button" aria-label="標記第 25 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">25</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.12</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Assume you are reviewing a table that lists the current stock option contracts and quotes. On<br>a specific contract the table shows an option interest value of 38 and volume of 9. This means<br>that:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>9 contracts were exercised on that day while 38 more were traded.</span></div><div class='choice'><span class='choice-label'>B)</span><span>38 contracts were traded on that day compared to only 9 traded on the previous day.</span></div><div class='choice'><span class='choice-label'>C)</span><span>9 contracts were traded on that day at a price of $.38 per share.</span></div><div class='choice'><span class='choice-label'>D)</span><span>38 contracts were traded on that day at the bid price and 9 were traded at the ask price.</span></div><div class='choice'><span class='choice-label'>E)</span><span>9 of the 38 outstanding contracts traded on that day.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.5 Option Quotes
-Topic:  Option contracts and quotes
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="52" id="q52">
-      <button class="flag-btn" type="button" aria-label="標記第 52 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">52</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.12</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You own stock in a firm that has a pure discount loan due in six months. The loan has a face<br>value of $50,000. The assets of the firm are currently worth $62,000. The stockholders in this<br>firm basically own a ________ option on the assets of the firm with a strike price of ________</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>put; $62,000.</span></div><div class='choice'><span class='choice-label'>B)</span><span>put; $50,000.</span></div><div class='choice'><span class='choice-label'>C)</span><span>warrant; $62,000.</span></div><div class='choice'><span class='choice-label'>D)</span><span>call; $62,000.</span></div><div class='choice'><span class='choice-label'>E)</span><span>call; $50,000.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="53" id="q53">
-      <button class="flag-btn" type="button" aria-label="標記第 53 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">53</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.12</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">If you consider the equity of a firm to be an option on the firm&#x27;s assets then the act of paying<br>off debt is comparable to ________ on the assets of the firm.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>purchasing a put option</span></div><div class='choice'><span class='choice-label'>B)</span><span>purchasing a call option</span></div><div class='choice'><span class='choice-label'>C)</span><span>exercising an in-the-money put option</span></div><div class='choice'><span class='choice-label'>D)</span><span>exercising an in-the-money call option</span></div><div class='choice'><span class='choice-label'>E)</span><span>selling a call option</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="54" id="q54">
-      <button class="flag-btn" type="button" aria-label="標記第 54 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">54</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.14</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">For every positive net present value project that a firm undertakes, the equity in the firm will<br>increase the most if the delta of the call option on the firm&#x27;s assets is:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>equal to one.</span></div><div class='choice'><span class='choice-label'>B)</span><span>between zero and one.</span></div><div class='choice'><span class='choice-label'>C)</span><span>equal to zero.</span></div><div class='choice'><span class='choice-label'>D)</span><span>between zero and minus one.</span></div><div class='choice'><span class='choice-label'>E)</span><span>equal to minus one.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="55" id="q55">
-      <button class="flag-btn" type="button" aria-label="標記第 55 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">55</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.14</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Assume a risky firm has both bondholders and stockholders. If the firm obtains a government<br>loan guarantee on its existing debt, who will gain from this guarantee?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>Existing stockholders only</span></div><div class='choice'><span class='choice-label'>B)</span><span>Both existing bondholders and stockholders in proportion to the firm&#x27;s debt-equity ratio</span></div><div class='choice'><span class='choice-label'>C)</span><span>Existing bondholders and stockholders on an equal basis</span></div><div class='choice'><span class='choice-label'>D)</span><span>Existing bondholders only</span></div><div class='choice'><span class='choice-label'>E)</span><span>Future stockholders only</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Debt and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="56" id="q56">
-      <button class="flag-btn" type="button" aria-label="標記第 56 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">56</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.14</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">If you consider bondholders to be the owners of a firm, then those bondholders:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>own a call option on the firm with an exercise price equal to the firm&#x27;s total equity.</span></div><div class='choice'><span class='choice-label'>B)</span><span>own a put option on the firm with an exercise price equal to the firm&#x27;s total debt.</span></div><div class='choice'><span class='choice-label'>C)</span><span>have written a put option on the firm with an exercise price equal to the firm&#x27;s total equity.</span></div><div class='choice'><span class='choice-label'>D)</span><span>have written a call option on the firm with an exercise price equal to the firm&#x27;s total debt.</span></div><div class='choice'><span class='choice-label'>E)</span><span>own a put option on the firm with an exercise price equal to the firm&#x27;s total assets.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="57" id="q57">
-      <button class="flag-btn" type="button" aria-label="標記第 57 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">57</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.15</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">If you consider stockholders to be the owners of a firm, then those stockholders:</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>own a call option on the firm with an exercise price equal to the firm&#x27;s total equity.</span></div><div class='choice'><span class='choice-label'>B)</span><span>own a put option on the firm with an exercise price equal to the firm&#x27;s total debt.</span></div><div class='choice'><span class='choice-label'>C)</span><span>have written a put option on the firm with an exercise price equal to the firm&#x27;s total equity.</span></div><div class='choice'><span class='choice-label'>D)</span><span>have written a call option on the firm with an exercise price equal to the firm&#x27;s total debt.</span></div><div class='choice'><span class='choice-label'>E)</span><span>own a put option on the firm with an exercise price equal to the firm&#x27;s total assets.</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="60" id="q60">
-      <button class="flag-btn" type="button" aria-label="標記第 60 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">60</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  A</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.15</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Alicia is considering purchasing a small building with the intent of opening a craft and<br>sewing center. The cost of the building is $49,000 and the cost to open the center is an additional<br>$150,000. If the center is opened and no other competition is nearby the project will provide a<br>hefty return. However, should the vacant building down the street be used for a competitive type<br>entity, then the center could be a losing proposition. Assume the building is purchased but the<br>opening of the center is delayed. This situation would best be described as ________ on a craft<br>and sewing center.</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>purchasing a call option</span></div><div class='choice'><span class='choice-label'>B)</span><span>writing a call option</span></div><div class='choice'><span class='choice-label'>C)</span><span>purchasing a put option</span></div><div class='choice'><span class='choice-label'>D)</span><span>writing a put option</span></div><div class='choice'><span class='choice-label'>E)</span><span>exercising a call on the land and writing a put</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 1 Easy
-Section:  22.11 Investment in Real Projects and Options
-Topic:  Options and corporate decisions
-Bloom&#x27;s:  Understand
-AACSB:  Reflective Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="61" id="q61">
-      <button class="flag-btn" type="button" aria-label="標記第 61 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">61</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  You will not exercise the call option because the strike price is greater than the<br>stock price. Why pay more than market price to purchase shares? Thus, your loss is equal to the<br>amount paid to purchase the option contracts:<br>Total profit = 8(100)[−$.55 + MAX($37.10 − 37.50, 0)]<br>Total profit = −$440</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.15</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You purchased eight TJH call option contracts with a strike price of $37.50 when the option<br>quote was $.55. The option expires today when the value of TJH stock is $37.10. Ignoring<br>trading costs and taxes, what is your total profit on your investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$0</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$120</span></div><div class='choice'><span class='choice-label'>C)</span><span>−$440</span></div><div class='choice'><span class='choice-label'>D)</span><span>$420</span></div><div class='choice'><span class='choice-label'>E)</span><span>$760</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="62" id="q62">
-      <button class="flag-btn" type="button" aria-label="標記第 62 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">62</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  Total profit = 5(100)[−$.34 + MAX($33.60 − 30, 0)]<br>Total profit = $1,630</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.17</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You purchased five WXO 30 call option contracts at a quoted price of $.34. What is your<br>total profit on this investment if the price of WXO is $33.60 on the option expiration date?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$170</span></div><div class='choice'><span class='choice-label'>B)</span><span>$326</span></div><div class='choice'><span class='choice-label'>C)</span><span>$1,630</span></div><div class='choice'><span class='choice-label'>D)</span><span>$1,440</span></div><div class='choice'><span class='choice-label'>E)</span><span>$1,576</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="63" id="q63">
-      <button class="flag-btn" type="button" aria-label="標記第 63 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">63</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D<br>Explanation:  Intrinsic value = Max($14.50 − 15, 0)<br>Intrinsic value = $0</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.17</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You own two call option contracts on ABC stock with a strike price of $15. When you<br>purchased the contracts the option price was $1.20 and the stock price was $15.90. What is the<br>total intrinsic value of these options if ABC stock is currently selling for $14.50 a share?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$280</span></div><div class='choice'><span class='choice-label'>B)</span><span>$180</span></div><div class='choice'><span class='choice-label'>C)</span><span>$100</span></div><div class='choice'><span class='choice-label'>D)</span><span>$0</span></div><div class='choice'><span class='choice-label'>E)</span><span>$29</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="64" id="q64">
-      <button class="flag-btn" type="button" aria-label="標記第 64 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">64</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Intrinsic value = Max($34.10 − 32.50, 0)<br>Intrinsic value = $1.60<br>The call is in the money.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.18</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Last week, you purchased one call option contract on DI stock with a strike price of $32.50<br>and an option price of $1.05. What is the intrinsic value per share of stock if DI is currently<br>priced at $34.10?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$2.15</span></div><div class='choice'><span class='choice-label'>B)</span><span>$1.60</span></div><div class='choice'><span class='choice-label'>C)</span><span>$.55</span></div><div class='choice'><span class='choice-label'>D)</span><span>$.93</span></div><div class='choice'><span class='choice-label'>E)</span><span>$0</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="65" id="q65">
-      <button class="flag-btn" type="button" aria-label="標記第 65 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">65</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 5(100)[−$3.65 + MAX($43 − 40, 0)]<br>Total profit = −$325</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.18</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You purchased five CVB call option contracts with a strike price of $40 when the option was<br>quoted at $3.65. The option expires today when the value of CVB stock is $43. Ignoring trading<br>costs and taxes, what is your total profit on your investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$0</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$325</span></div><div class='choice'><span class='choice-label'>C)</span><span>$800</span></div><div class='choice'><span class='choice-label'>D)</span><span>$1,500</span></div><div class='choice'><span class='choice-label'>E)</span><span>−$1,825</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="66" id="q66">
-      <button class="flag-btn" type="button" aria-label="標記第 66 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">66</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 2(100)[−$.08 + MAX($14.80 − 15, 0)]<br>Total profit = −$16<br>The option expires out of the money.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.19</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You purchased two WXO 15 call option contracts at a quoted price of $.08. What is your<br>total profit on this investment if the price of WXO is $14.80 on the option expiration date?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>−$20</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$16</span></div><div class='choice'><span class='choice-label'>C)</span><span>$12</span></div><div class='choice'><span class='choice-label'>D)</span><span>$16</span></div><div class='choice'><span class='choice-label'>E)</span><span>$20</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="67" id="q67">
-      <button class="flag-btn" type="button" aria-label="標記第 67 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">67</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D<br>Explanation:  Contract intrinsic value = 1(100)[Max($45 − 44.75, 0)]<br>Contract intrinsic value = $25</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.19</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Three weeks ago, you purchased a July 45 put option on RPJ stock at an option price of<br>$3.20. The market price of RPJ stock three weeks ago was $42.70. Today, RPJ stock is selling at<br>$44.75 a share and the July 45 put is priced at $.80. What is the intrinsic value of your put<br>contract?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$295</span></div><div class='choice'><span class='choice-label'>B)</span><span>$210</span></div><div class='choice'><span class='choice-label'>C)</span><span>$0</span></div><div class='choice'><span class='choice-label'>D)</span><span>$25</span></div><div class='choice'><span class='choice-label'>E)</span><span>$110</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.3 Put Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="68" id="q68">
-      <button class="flag-btn" type="button" aria-label="標記第 68 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">68</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E<br>Explanation:  Intrinsic value of contracts = 10(100)[Max($25 − 24.50, 0)]<br>Intrinsic value of contracts = $500</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.20</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You own ten put option contracts on XYZ stock with an exercise price of $25. What is the<br>total intrinsic value of these contracts if XYZ stock is currently selling for $24.50 a share?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>−$500</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$50</span></div><div class='choice'><span class='choice-label'>C)</span><span>$0</span></div><div class='choice'><span class='choice-label'>D)</span><span>$50</span></div><div class='choice'><span class='choice-label'>E)</span><span>$500</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.3 Put Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="69" id="q69">
-      <button class="flag-btn" type="button" aria-label="標記第 69 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">69</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 3(100)[−$.60 + MAX($60 − 48.10,0)]<br>Total profit = $3,390</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.20</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Three months ago, you purchased three put option contracts on WXX stock with a strike<br>price of $60 and an option price of $.60. The option expires today when the value of WXX stock<br>is $48.10. Ignoring trading costs and taxes, what is your total profit on your investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$180</span></div><div class='choice'><span class='choice-label'>B)</span><span>$3,390</span></div><div class='choice'><span class='choice-label'>C)</span><span>$60</span></div><div class='choice'><span class='choice-label'>D)</span><span>$1,130</span></div><div class='choice'><span class='choice-label'>E)</span><span>$1,090</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.3 Put Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="70" id="q70">
-      <button class="flag-btn" type="button" aria-label="標記第 70 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">70</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 1(100)[−$.60 + MAX($61 − 63.50,0)]<br>Total profit = −$60</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.21</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Three months ago, you purchased a put option contract on WXX stock with a strike price of<br>$61 and an option price of $.60. The option expires today when the value of WXX stock is<br>$63.50. Ignoring trading costs and taxes, what is your total profit on your investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$310</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$60</span></div><div class='choice'><span class='choice-label'>C)</span><span>$0</span></div><div class='choice'><span class='choice-label'>D)</span><span>$60</span></div><div class='choice'><span class='choice-label'>E)</span><span>−$190</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.3 Put Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="71" id="q71">
-      <button class="flag-btn" type="button" aria-label="標記第 71 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">71</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D<br>Explanation:  Total profit = 10(100)[$1.20 + MIN($33 − 31.20, 0)]<br>Total profit = $1,200</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.21</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You sold ten put option contracts on PLT stock with an exercise price of $31.20 and an<br>option price of $1.20. Today, the option expires and the underlying stock is selling for $33 a<br>share. Ignoring trading costs and taxes, what is your total profit on this investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>−$3,300</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$1,200</span></div><div class='choice'><span class='choice-label'>C)</span><span>$120</span></div><div class='choice'><span class='choice-label'>D)</span><span>$1,200</span></div><div class='choice'><span class='choice-label'>E)</span><span>$3,300</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="72" id="q72">
-      <button class="flag-btn" type="button" aria-label="標記第 72 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">72</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  Total profit = 1(100)[$.50 + MIN($20 − 21, 0)]<br>Total profit = −$50</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.22</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You sold a put contract on EDF stock at an option price of $.50 and an exercise price of $21.<br>Today, EDF stock is selling for $20 a share and your option position was closed out. Ignoring<br>transaction costs and taxes, what is your total profit?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$50</span></div><div class='choice'><span class='choice-label'>B)</span><span>$60</span></div><div class='choice'><span class='choice-label'>C)</span><span>−$50</span></div><div class='choice'><span class='choice-label'>D)</span><span>−$60</span></div><div class='choice'><span class='choice-label'>E)</span><span>$0</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="73" id="q73">
-      <button class="flag-btn" type="button" aria-label="標記第 73 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">73</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 10(100)[$.60 + MIN($41 − 46.05, 0)]<br>Total profit = −$4,450</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.22</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You wrote ten call option contracts on JIG stock with a strike price of $41 and an option<br>price of $.60. What is your total profit on this investment if the price of JIG is $46.05 on the<br>option expiration date?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>−$5,050</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$4,450</span></div><div class='choice'><span class='choice-label'>C)</span><span>$4,100</span></div><div class='choice'><span class='choice-label'>D)</span><span>$4,450</span></div><div class='choice'><span class='choice-label'>E)</span><span>$5,050</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option valuations and payoffs
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="74" id="q74">
-      <button class="flag-btn" type="button" aria-label="標記第 74 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">74</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  The buyer of the put contracts will not exercise the options since the market price<br>exceeds the strike price. Thus, your total profit equals the option premium you received as the<br>option writer.<br>Total profit = 10(100)[$.40 + MIN($41.05 − 40.00, 0)]<br>Total profit = $400</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.23</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You wrote ten put option contracts on JIG stock with a strike price of $40 and an option<br>price of $.40. What is your total profit on this investment if the price of JIG is $41.05 on the<br>option expiration date?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$6,450</span></div><div class='choice'><span class='choice-label'>B)</span><span>$5,650</span></div><div class='choice'><span class='choice-label'>C)</span><span>$400</span></div><div class='choice'><span class='choice-label'>D)</span><span>−$5,650</span></div><div class='choice'><span class='choice-label'>E)</span><span>−$6,450</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="75" id="q75">
-      <button class="flag-btn" type="button" aria-label="標記第 75 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">75</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  D<br>Explanation:  Total profit = 10(100)[$1.10 + MIN($34.30 − 32.50,0)]<br>Total profit = $1,100</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.23</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You sold ten put option contracts on PLT stock with an exercise price of $32.50 and an<br>option price of $1.10. Today, the option expires when the underlying stock is selling for $34.30 a<br>share. Ignoring trading costs and taxes, what is your total profit on this investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$2,900</span></div><div class='choice'><span class='choice-label'>B)</span><span>− $1,100</span></div><div class='choice'><span class='choice-label'>C)</span><span>$700</span></div><div class='choice'><span class='choice-label'>D)</span><span>$1,100</span></div><div class='choice'><span class='choice-label'>E)</span><span>− $2,900</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="76" id="q76">
-      <button class="flag-btn" type="button" aria-label="標記第 76 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">76</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  B<br>Explanation:  Total profit = 1(100)[$.25 + MIN($21.70 − 22.50,0)]<br>Total profit = −$55<br>When the put was exercised, you had to buy at $22.50 and could only resell at $21.70.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.24</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">You sold a put contract on EDF stock at an option price of $.25 and an exercise price of<br>$22.50. The option expires today when EDF stock is selling for $21.70 a share. Ignoring<br>transaction costs and taxes, what is your total profit on this investment?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$105</span></div><div class='choice'><span class='choice-label'>B)</span><span>−$55</span></div><div class='choice'><span class='choice-label'>C)</span><span>−$25</span></div><div class='choice'><span class='choice-label'>D)</span><span>$55</span></div><div class='choice'><span class='choice-label'>E)</span><span>$0</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.4 Selling Options
-Topic:  Option payoffs and profits
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="77" id="q77">
-      <button class="flag-btn" type="button" aria-label="標記第 77 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">77</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  E<br>Explanation:  Cost = 4(100)($.26)<br>Cost = $104</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.25</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">What is the cost of four October 40 put option contracts on a stock given the following price<br>quotes?<br><br>Stock price $40.86<br><br>Expiration:<br>Strike<br>Call bid<br>Call ask<br>Put bid<br>Put ask<br><br>Jul<br>35<br>6.03<br>6.12<br>0<br>0<br><br>Oct<br>35<br>6.17<br>6.26<br>0<br>0<br><br>Jul<br>40<br>1.06<br>1.14<br>.05<br>.08<br><br>Oct<br>40<br>1.23<br>1.31<br>.22<br>.26<br><br>Jul<br>45<br>0<br>0<br>5.13<br>5.25<br><br>Oct<br>45<br>0<br>0<br>5.46<br>5.50</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$22</span></div><div class='choice'><span class='choice-label'>B)</span><span>$26</span></div><div class='choice'><span class='choice-label'>C)</span><span>$240</span></div><div class='choice'><span class='choice-label'>D)</span><span>$88</span></div><div class='choice'><span class='choice-label'>E)</span><span>$104</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.5 Option Quotes
-Topic:  Option contracts and quotes
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="78" id="q78">
-      <button class="flag-btn" type="button" aria-label="標記第 78 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">78</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  Contract value = 1(100)($6.15)<br>Contract value = $615</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.26</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">What is the value of one August 25 call option contract?<br><br>KNJ (KNJ)<br>Underlying stock price: 30.86<br><br>Call<br>Put<br><br>Expiration<br>Strike<br>Last<br>Last<br><br>Aug<br>25<br>6.15<br>.05<br><br>Nov<br>25<br>6.60<br>.10<br><br>Aug<br>35<br>.10<br>4.60<br><br>Nov<br>35<br>.70<br>5.10</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$4.60</span></div><div class='choice'><span class='choice-label'>B)</span><span>$.10</span></div><div class='choice'><span class='choice-label'>C)</span><span>$615</span></div><div class='choice'><span class='choice-label'>D)</span><span>$10</span></div><div class='choice'><span class='choice-label'>E)</span><span>$6.15</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.5 Option Quotes
-Topic:  Option contracts and quotes
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="99" id="q99">
-      <button class="flag-btn" type="button" aria-label="標記第 99 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">99</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  C<br>Explanation:  Market value of debt = $86.28m − 53.09m<br>Market value of debt = $33.19m</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.26</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">The current market value of the assets of ABCD is $86.28 million. The call option value on<br>the firm&#x27;s assets is $53.09 million. What is the market value of the firm&#x27;s debt?</div>
-        <div class='choices'><div class='choice'><span class='choice-label'>A)</span><span>$74.49 million</span></div><div class='choice'><span class='choice-label'>B)</span><span>$31.36 million</span></div><div class='choice'><span class='choice-label'>C)</span><span>$33.19 million</span></div><div class='choice'><span class='choice-label'>D)</span><span>$44.08 million</span></div><div class='choice'><span class='choice-label'>E)</span><span>$139.37 million</span></div></div>
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Apply
-AACSB:  Knowledge Application
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="100" id="q100">
-      <button class="flag-btn" type="button" aria-label="標記第 100 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">100</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:<br> ∙<br>Since you expect the stock to decline in value, you need a means of offsetting this<br>potential loss. Assuming the market has not already priced in your expectation, you could buy<br>puts now and then sell the puts prior to expiration. If your prediction is correct, you will earn a<br>profit on the puts which will help offset the loss of value in the shares. If your prediction is<br>incorrect and the stock increases in value, then you lose the option premium which will offset<br>some of the gains in the stock value. You most likely would not want to write covered calls as<br>you would risk the option being called if your prediction was incorrect and the stock rose in<br>value.<br> ∙<br>In this case, you would probably buy calls and hope to sell them at a higher price later.<br>You could also write puts, but you would risk being forced to buy shares at the exercise price<br>and sell them at a lower market price. In the latter case, Aunt Minnie would not be happy with<br>you.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.27</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Suppose your wealthy Aunt Minnie has asked you to manage her large stock portfolio. You<br>would like to use options to increase her total return and also reduce her risks. Describe the types<br>of options you would buy or sell, as well as your rationale, given the following circumstances:<br> ∙<br>Aunt Minnie owns 10,000 shares of a large oil company common stock. You believe the<br>stock is overpriced, but she won&#x27;t let you sell any shares because her late husband told her to<br>never, ever sell any. How do you protect her from what you believe is an impending price<br>decline?<br> ∙<br>Your analysis suggests that a technology stock is poised for a large price increase within the<br>next year. Aunt Minnie won&#x27;t agree to spend the dollars required to obtain shares but has<br>consented to allow you to spend some money on options but only because she trusts you. You<br>don&#x27;t want to disappoint her. What should you do?</div>
-        
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.2 Call Options
-Topic:  Options
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="104" id="q104">
-      <button class="flag-btn" type="button" aria-label="標記第 104 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">104</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  The analogy only applies to levered firms. At maturity of the firm&#x27;s debt, the<br>stockholders have the option to either 1) pay the debtholders the par value of their debt or 2) turn<br>the firm&#x27;s assets over to the debtholders. If the firm&#x27;s assets are worth less than the par value of<br>the debt, the stockholders will not exercise their call, that is, they will let the debtholders have<br>the assets.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.28</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">Explain the rationale behind the statement that equity is a call option on the firm&#x27;s assets.<br>When would a shareholder allow the call to expire?</div>
-        
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.9 Stocks and Bonds as Options
-Topic:  Equity and options
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-    <article class="q-card" data-q="105" id="q105">
-      <button class="flag-btn" type="button" aria-label="標記第 105 題" title="標記容易出錯">⚑</button>
-      <div class="q-num">105</div>
-      <div class="answer-cell" title="滑鼠移入題目卡片會顯示答案；也可反白選取查看"><span>Answer:  There are many ways options apply in capital budgeting. One example goes back to the<br>value of the firm and the leverage in the capital structure. For a highly levered firm, equity<br>holders could prefer a lower NPV, or even a negative NPV project to a higher NPV project due<br>to the low level of equity interest in the firm as a whole. Options apply in capital budgeting in<br>many other ways such as delaying a project or a portion thereof, abandoning the project if it<br>appears to be unsuccessful, or expanding the project if it is successful. While these particular<br>options may not have been discussed in the chapter, you should realize that any option that<br>provides flexibility increases the value of the project to the stockholders.</span></div>
-      <div class="q-main">
-        <div class="q-head"><span class="page-ref">PDF p.29</span><span class="flag-tag">已標記</span></div>
-        <div class="stem">How do options apply to capital budgeting? Explain and provide an example.</div>
-        
-        <details class='meta'><summary>題目資訊</summary><pre>Difficulty: 2 Medium
-Section:  22.11 Investment in Real Projects and Options
-Topic:  Options and corporate decisions
-Bloom&#x27;s:  Analyze
-AACSB:  Analytical Thinking
-Accessibility:  Keyboard Navigation</pre></details>
-      </div>
-    </article>
-  </div>
-  <div class="empty" id="emptyState">目前沒有符合條件的題目。</div>
-</main>
-<footer class="container">
-  <p>使用方式：點左側旗幟可標記容易出錯題；標記會自動儲存在本機瀏覽器 localStorage。答案預設以白字隱藏，滑鼠移到題目卡片上會顯示，也可以用滑鼠反白答案欄查看。</p>
-</footer>
-<script>
-const storageKey = 'ross-ch22-review-flags-v1';
-let flags = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]'));
-let currentFilter = 'all';
-const cards = Array.from(document.querySelectorAll('.q-card'));
-const markedCount = document.getElementById('markedCount');
-const emptyState = document.getElementById('emptyState');
-const search = document.getElementById('search');
-function saveFlags() { localStorage.setItem(storageKey, JSON.stringify(Array.from(flags))); }
-function syncCards() {
-  cards.forEach(card => card.classList.toggle('marked', flags.has(card.dataset.q)));
-  markedCount.textContent = flags.size;
-}
-function applyFilter() {
-  const q = search.value.trim().toLowerCase();
-  let shown = 0;
-  cards.forEach(card => {
-    const isMarked = flags.has(card.dataset.q);
-    const matchesFilter = currentFilter === 'all' || isMarked;
-    const matchesSearch = !q || card.innerText.toLowerCase().includes(q);
-    const show = matchesFilter && matchesSearch;
-    card.style.display = show ? '' : 'none';
-    if (show) shown++;
-  });
-  emptyState.style.display = shown ? 'none' : 'block';
-}
-document.querySelectorAll('.flag-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const card = e.currentTarget.closest('.q-card');
-    const id = card.dataset.q;
-    flags.has(id) ? flags.delete(id) : flags.add(id);
-    saveFlags(); syncCards(); applyFilter();
-  });
-});
-document.querySelectorAll('.tab').forEach(btn => {
-  btn.addEventListener('click', e => {
-    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    currentFilter = e.currentTarget.dataset.filter;
-    applyFilter();
-  });
-});
-search.addEventListener('input', applyFilter);
-syncCards(); applyFilter();
-</script>
+
+    <div class="container">
+        <h1>Corporate Finance</h1>
+        <p class="subtitle">題庫單元選擇：請選擇你要複習的章節</p>
+
+        <ul>
+            <li><a href="Ch13_quiz.html">Chapter 13 — Return, Risk, and the Security Market Line</a></li>
+            <li><a href="Ch18_quiz.html">Chapter 18 — Short-Term Finance and Planning</a></li>
+            <li><a href="Ch19_quiz.html">Chapter 19 — Dividends and Other Payouts</a></li>
+            <li><a href="Ch22_quiz.html">Chapter 22 — Options and Corporate Finance</a></li>
+            <li><a href="Ch23_quiz.html">Chapter 23 — Options and Corporate Finance: Extensions and Applications</a>
+            </li>
+            <li><a href="Ch24_quiz.html">Chapter 24 — Warrants and Convertibles</a></li>
+            <li><a href="Ch26_quiz.html">Chapter 26 — Short-Term Finance and Planning</a></li>
+            <li><a href="Ch29_quiz.html">Chapter 29 — Mergers, Acquisitions, and Divestitures</a></li>
+        </ul>
+
+        <div class="footer">
+            公司理財 題庫自主複習系統
+        </div>
+    </div>
+
 </body>
+
 </html>

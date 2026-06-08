@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch19 Dividends and Other Payouts</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #ffffff;
+    --border: #ddd8cc;
+    --text: #1a1714;
+    --text-muted: #7a7268;
+    --accent: #1a6b4a;
+    --accent-soft: #eef7f3;
+    --flag-active: #e67e22;
+    --flag-border: #f39c12;
+    --flag-bg: #fef9f0;
+    --answer-hidden: #f5f2ec;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  header {
+    background: var(--text);
+    color: #f5f2ec;
+    padding: 32px 40px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  header h1 {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  header .meta {
+    font-size: 0.7rem;
+    color: #a09890;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .flag-count {
+    font-size: 0.72rem;
+    color: var(--flag-border);
+    white-space: nowrap;
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 4px;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 6px 14px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #c0b8b0;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .filter-btn:hover:not(.active) {
+    border-color: #888;
+    color: #f5f2ec;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+  }
+
+  .q-card.flagged {
+    border-color: var(--flag-border);
+    border-left: 4px solid var(--flag-active);
+    background: var(--flag-bg);
+  }
+
+  .q-card[data-hidden="true"] { display: none; }
+
+  .q-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 14px 16px 0 16px;
+  }
+
+  .flag-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 10px 0 0;
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .flag-btn:hover { color: var(--flag-active); transform: scale(1.2); }
+  .flagged .flag-btn { color: var(--flag-active); }
+
+  .q-num {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    padding-top: 2px;
+    min-width: 36px;
+  }
+
+  .q-answer-wrap {
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .q-answer {
+    display: inline-block;
+    min-width: 28px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    background: var(--answer-hidden);
+    color: var(--answer-hidden);
+    border: 1px solid #e0dbd2;
+    transition: color 0.2s;
+    user-select: text;
+    cursor: default;
+  }
+
+  .q-card:hover .q-answer,
+  .q-answer:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .q-text {
+    flex: 1;
+    font-family: var(--serif);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  .flag-tag {
+    display: none;
+    font-size: 0.62rem;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--flag-active);
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid var(--flag-border);
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .flagged .flag-tag { display: inline-block; }
+
+  .q-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    padding: 10px 16px 14px 56px;
+  }
+
+  .q-option {
+    font-family: var(--serif);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .q-option span.opt-letter {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #bbb;
+    margin-right: 4px;
+  }
+
+  .q-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 16px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: none;
+  }
+
+  .empty-state.visible { display: block; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>Chapter 19 — Dividends and Other Payouts</h1>
+      <div class="meta">CORPORATE FINANCE 12e (Ross) &nbsp;·&nbsp; Q1–51 &nbsp;·&nbsp; Hover to reveal answers</div>
+    </div>
+    <div class="header-right">
+      <span class="flag-count">🚩 <span id="flagCount">0</span> 已標記</span>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全部題目</button>
+        <button class="filter-btn" data-filter="flagged" onclick="setFilter('flagged')">已標記</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="questionList"></main>
+<div class="empty-state" id="emptyState">目前沒有已標記的題目。點擊題目左側的 🚩 旗幟來標記容易出錯的題目。</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    text: "Nu Tech is a technology firm with good growth prospects. The firm wishes to do something to acknowledge the loyalty of its shareholders but needs all its available cash to fund its rapid growth. The market price of its stock is currently trading in the upper end of its preferred trading range. The firm could consider:",
+    options: ["A) a liquidating dividend.", "B) an extra cash dividend.", "C) a reverse stock split.", "D) a stock dividend.", "E) a cash distribution."],
+    answer: "D"
+  },
+  {
+    id: 2,
+    text: "Payments made out of a firm's earnings to its owners in the form of cash or stock are called:",
+    options: ["A) dividends.", "B) distributions.", "C) share repurchases.", "D) payments-in-kind.", "E) stock splits."],
+    answer: "A"
+  },
+  {
+    id: 3,
+    text: "A cash payment made by a firm to its owners in the normal course of business is called a:",
+    options: ["A) share repurchase.", "B) liquidating dividend.", "C) regular cash dividend.", "D) special dividend.", "E) extra cash dividend."],
+    answer: "C"
+  },
+  {
+    id: 4,
+    text: "A cash payment made by a firm to its owners when some of the firm's assets are sold off is called a:",
+    options: ["A) liquidating dividend.", "B) regular cash dividend.", "C) special dividend.", "D) extra cash dividend.", "E) share repurchase."],
+    answer: "A"
+  },
+  {
+    id: 5,
+    text: "A payment made by a firm to its owners in the form of new shares of stock is called a ________ dividend.",
+    options: ["A) stock", "B) normal", "C) special", "D) extra", "E) liquidating"],
+    answer: "A"
+  },
+  {
+    id: 6,
+    text: "A(n) ________ is an alternative method to cash dividends which is used to pay out a firm's earnings to shareholders in the form of a cash payment.",
+    options: ["A) merger", "B) acquisition", "C) payment-in-kind", "D) stock split", "E) stock repurchase"],
+    answer: "E"
+  },
+  {
+    id: 7,
+    text: "The last date on which you can purchase shares of stock and still receive the dividend is the date ________ business day(s) prior to the date of record.",
+    options: ["A) zero", "B) one", "C) three", "D) five", "E) seven"],
+    answer: "C"
+  },
+  {
+    id: 8,
+    text: "Leslie purchased 100 shares of GT stock on June 7th. Marti purchased 100 shares of GT stock on Monday, July 9th. GT declared a dividend on June 20th to shareholders of record on July 13th that is payable on August 1st. Which one of the following statements concerning the dividend paid on August 1st is correct given this information?",
+    options: ["A) Neither Leslie nor Marti are entitled to the dividend.", "B) Leslie is entitled to the dividend but Marti is not.", "C) Marti is entitled to the dividend but Leslie is not.", "D) Both Marti and Leslie are entitled to the dividend.", "E) Both Marti and Leslie are each entitled to one-half of the dividend amount."],
+    answer: "D"
+  },
+  {
+    id: 9,
+    text: "Ignoring taxes and all else held constant, the market value of a stock should decrease by the amount of the dividend on the:",
+    options: ["A) dividend declaration date.", "B) ex-dividend date.", "C) date of record.", "D) date of payment.", "E) day after the date of payment."],
+    answer: "B"
+  },
+  {
+    id: 10,
+    text: "The annual dividend per share stated as a percentage of the annual earnings per share is called the:",
+    options: ["A) dividend yield.", "B) dividend per share.", "C) annual yield.", "D) dividend rate.", "E) dividend payout."],
+    answer: "E"
+  },
+  {
+    id: 11,
+    text: "The date on which the board of directors passes a resolution authorizing payment of a dividend to the shareholders is the ________ date.",
+    options: ["A) ex-rights", "B) ex-dividend", "C) record", "D) payment", "E) declaration"],
+    answer: "E"
+  },
+  {
+    id: 12,
+    text: "The date before which a purchaser of stock is entitled to receive a declared dividend, but on or after that date they cannot, is called the ________ date.",
+    options: ["A) ex-rights", "B) ex-dividend", "C) record", "D) payment", "E) declaration"],
+    answer: "B"
+  },
+  {
+    id: 13,
+    text: "The date by which a stockholder must be registered on the firm's roll as having share ownership in order to receive a declared dividend is called the:",
+    options: ["A) ex-rights date.", "B) ex-dividend date.", "C) date of record.", "D) date of payment.", "E) declaration date."],
+    answer: "C"
+  },
+  {
+    id: 14,
+    text: "The date on which a firm actually distributes its declared dividend is called the:",
+    options: ["A) ex-rights date.", "B) ex-dividend date.", "C) date of record.", "D) date of payment.", "E) declaration date."],
+    answer: "D"
+  },
+  {
+    id: 15,
+    text: "Which one of the following lists dividend events in the correct chronological order from earliest to latest?",
+    options: ["A) Date of record, declaration date, ex-dividend date", "B) Date of record, ex-dividend date, declaration date", "C) Declaration date, date of record, ex-dividend date", "D) Declaration date, ex-dividend date, date of record", "E) Ex-dividend date, date of record, declaration date"],
+    answer: "D"
+  },
+  {
+    id: 16,
+    text: "The dividend-irrelevance proposition of Miller and Modigliani depends on which one of the following relationships between investment policy and dividend policy?",
+    options: ["A) The level of investment does not influence or matter to the dividend decision.", "B) Once dividend policy is set the investment decision can be made.", "C) The investment policy is set ahead of time and not altered by changes in dividend policy.", "D) Since dividend policy is irrelevant there is no relationship between investment policy and dividend policy.", "E) Miller and Modigliani were only concerned about capital structure."],
+    answer: "C"
+  },
+  {
+    id: 17,
+    text: "The ability of shareholders to undo the dividend policy of a firm and create an alternative dividend payment policy via reinvesting dividends or selling shares of stock is referred to as:",
+    options: ["A) the perfect foresight model.", "B) MM Proposition I.", "C) capital structure irrelevancy.", "D) homemade leverage.", "E) homemade dividends."],
+    answer: "E"
+  },
+  {
+    id: 18,
+    text: "Which one of these statements is true?",
+    options: ["A) Dividends are irrelevant.", "B) Shareholders are unable to personally adjust the dividend policy set by a firm.", "C) According to Miller and Modigliani, a firm should alter its investment policy whenever a change is made in its dividend policy.", "D) Dividend policy is relevant.", "E) Firms should never give up a positive NPV project to increase a dividend."],
+    answer: "E"
+  },
+  {
+    id: 19,
+    text: "A firm announces that it is willing to repurchase a number of shares at various prices and shareholders have the option to indicate how many shares they are willing to sell at the various prices. This process is called a:",
+    options: ["A) homemade dividend.", "B) tender offer.", "C) free market sale.", "D) Dutch auction.", "E) targeted repurchase."],
+    answer: "D"
+  },
+  {
+    id: 20,
+    text: "A firm can repurchase its shares in all the following ways except through:",
+    options: ["A) a tender offer.", "B) a reverse stock split.", "C) a targeted repurchase.", "D) open market purchases.", "E) a Dutch auction."],
+    answer: "B"
+  },
+  {
+    id: 21,
+    text: "Ignore commissions, taxes, and other imperfections. If a firm substitutes a repurchase for a cash dividend, the primary difference will be an increase in the:",
+    options: ["A) earnings per share.", "B) total value received by each investor.", "C) total earnings of the firm.", "D) excess cash reserves of the firm.", "E) number of shares outstanding."],
+    answer: "A"
+  },
+  {
+    id: 22,
+    text: "Which one of the following is not a reason why firms choose repurchases rather than dividends?",
+    options: ["A) Provide flexibility", "B) Increase the value of existing stock options", "C) Provide shareholders with a tax advantage", "D) Offset dilution", "E) Conserve cash"],
+    answer: "E"
+  },
+  {
+    id: 23,
+    text: "Assume personal tax rates are lower than corporate tax rates. From a tax-paying shareholder point of view, how should a firm spend its excess cash once it has funded all positive net present value projects?",
+    options: ["A) Repurchase shares", "B) Acquire another firm", "C) Purchase financial assets", "D) Increase cash dividends", "E) Increase executive compensation"],
+    answer: "A"
+  },
+  {
+    id: 24,
+    text: "From a tax-paying investor's point of view, a stock repurchase:",
+    options: ["A) is equivalent to a cash dividend.", "B) is more desirable than a cash dividend.", "C) has the same tax effects as a cash dividend.", "D) is more highly taxed than a cash dividend.", "E) creates a tax liability even if the investor does not sell any of the shares he owns."],
+    answer: "B"
+  },
+  {
+    id: 25,
+    text: "A scenario exists that supports an argument in favor of a low dividend policy when:",
+    options: ["A) tax laws allow capital gains to be deferred until the gain is realized.", "B) few, if any, positive net present value projects are available to a firm.", "C) a preponderance of stockholders have minimal taxable income.", "D) the majority of the stockholders have other investment opportunities that offer higher rewards with similar risk characteristics.", "E) corporate tax rates exceed personal tax rates."],
+    answer: "A"
+  },
+  {
+    id: 26,
+    text: "The market's reaction to the announcement of a change in the firm's dividend payout is referred to as the:",
+    options: ["A) information content effect.", "B) clientele effect.", "C) efficient markets hypothesis.", "D) MM Proposition I.", "E) MM Proposition II."],
+    answer: "A"
+  },
+  {
+    id: 27,
+    text: "Which one of the following is cited as an argument favoring a high dividend payout?",
+    options: ["A) Flotation costs involved with a new securities issue", "B) High personal tax rates relative to corporate rates", "C) Desire to maintain constant dividends over time", "D) Restrictive covenant on dividend payouts contained in a bond indenture agreement", "E) Agency costs related to excess cash reserves"],
+    answer: "E"
+  },
+  {
+    id: 28,
+    text: "The information content of a dividend increase generally signals that:",
+    options: ["A) the firm has a one-time surplus of cash.", "B) the firm has several net present value projects to pursue.", "C) management believes the future earnings of the firm will be strong.", "D) the firm has more cash than it needs due to sales declines.", "E) future dividends will be lower."],
+    answer: "C"
+  },
+  {
+    id: 29,
+    text: "The behavioral finance concept of self-control is an argument in favor of:",
+    options: ["A) frequent stock splits.", "B) low cash dividends.", "C) stock dividends.", "D) reverse stock splits.", "E) high cash dividends."],
+    answer: "E"
+  },
+  {
+    id: 30,
+    text: "The information content effect implies that stock prices will rise when dividends are increased provided that the dividend increase:",
+    options: ["A) is denoted as a one-time event.", "B) causes stockholders to increase their expectations of future cash flows.", "C) is greater than the average historical dividend increase.", "D) is substantial in both dollar amount and percentage terms.", "E) is combined with a stock repurchase."],
+    answer: "B"
+  },
+  {
+    id: 31,
+    text: "The observed empirical fact that stocks attract particular investors based on the firm's dividend policy and the resulting tax impact on investors is called the:",
+    options: ["A) information content effect.", "B) clientele effect.", "C) efficient markets hypothesis.", "D) MM Proposition I.", "E) MM Proposition II."],
+    answer: "B"
+  },
+  {
+    id: 32,
+    text: "Based on the concept of the clientele effect, which one of these combinations correctly aligns an investor group with its preferred type of stocks?",
+    options: ["A) Low-tax-bracket individuals; zero-to-low payout stocks", "B) High-tax-bracket individuals; low-to-medium payout stocks", "C) Corporations; low-to-medium payout stocks", "D) Tax-free institutions; medium-payout stocks", "E) High-tax-bracket individuals; high-payout stocks"],
+    answer: "D"
+  },
+  {
+    id: 33,
+    text: "According to the clientele effect, firms can only boost their stock price:",
+    options: ["A) by increasing the dividend payout ratio.", "B) by increasing their regular cash dividends.", "C) by setting their dividend to the level expected by the highest-dividend-receiving satisfied clientele group.", "D) by commencing dividend payments if they are a non-dividend-paying firm.", "E) if an unsatisfied clientele group exists."],
+    answer: "E"
+  },
+  {
+    id: 34,
+    text: "Of the following factors, which one is considered to be the primary factor affecting a firm's dividend payout decision?",
+    options: ["A) Considering the personal taxes of company stockholders", "B) Maintaining a consistent dividend policy", "C) Attracting retail investors", "D) Attracting institutional investors", "E) Avoiding flotation costs"],
+    answer: "B"
+  },
+  {
+    id: 35,
+    text: "Financial managers:",
+    options: ["A) are reluctant to cut dividends.", "B) tend to ignore past dividend policies.", "C) tend to prefer cutting dividends every time quarterly earnings decline.", "D) prefer cutting dividends over incurring flotation costs.", "E) place little emphasis on dividend policy consistency."],
+    answer: "A"
+  },
+  {
+    id: 36,
+    text: "Which one of these statements is correct?",
+    options: ["A) In the U.S. economy, dividends are quite insignificant.", "B) Over the last few decades, the percentage of U.S. firms paying dividends has increased.", "C) The tax law change in May 2003 is cited as one reason why the percentage of dividend payers has decreased in the U.S.", "D) Dividends are more tax-advantaged than capital gains as of 2017.", "E) Much of the dividend income paid in the U.S. is related to a relatively small number of firms."],
+    answer: "E"
+  },
+  {
+    id: 37,
+    text: "Firms generally:",
+    options: ["A) set high target payout ratios when they are relatively young.", "B) decrease their dividends as soon as they expect earnings to decline.", "C) allow their dividend changes to lag their earnings changes.", "D) set short-term target ratios of dividends to earnings.", "E) set the dividend growth rate equal to the firm's earnings growth rate."],
+    answer: "C"
+  },
+  {
+    id: 38,
+    text: "Which one of these is a con of paying dividends?",
+    options: ["A) Paying dividends reduces agency costs when excess cash is available to a firm.", "B) Dividends can be used to signal a firm's optimistic outlook.", "C) Dividends are frequently taxed as ordinary income.", "D) Dividends appeal to income-seeking investors.", "E) Managers can pay dividends to keep cash from bondholders."],
+    answer: "C"
+  },
+  {
+    id: 39,
+    text: "Financial executives place the greatest importance on which one of these factors when setting dividend policy?",
+    options: ["A) Setting a high-dividend payout ratio even when earnings are unstable", "B) Maintaining a consistent dividend policy", "C) Increasing current dividends even if those dividends need to be lowered in the near future", "D) Reducing dividends anytime future earnings are in doubt", "E) Attracting institutional investors"],
+    answer: "B"
+  },
+  {
+    id: 40,
+    text: "Which one of these is a characteristic of a sensible payout policy?",
+    options: ["A) Over time pay out half of all free cash flows", "B) Set the current regular dividend consistent with a 100 percent payout ratio", "C) Increase regular dividends to distribute transitory cash flow increases", "D) Set the dividends high even if it means acquiring expensive external financing", "E) Avoid rejecting positive NPV projects to increase dividends or buyback shares"],
+    answer: "E"
+  },
+  {
+    id: 41,
+    text: "Share repurchases:",
+    options: ["A) reduce a firm's demand for external financing.", "B) offer less tax advantages to shareholders than do cash dividends.", "C) tend to increase agency costs.", "D) are always positive net present value investments.", "E) can be difficult to verify."],
+    answer: "E"
+  },
+  {
+    id: 42,
+    text: "A change in dividend policy does not affect the value of a share of stock as long as:",
+    options: ["A) the dividend payout ratio remains constant.", "B) all future dividends are changed by the same amount.", "C) all the distributable cash flow is paid out.", "D) there is an offsetting change in stock repurchases.", "E) shareholders are given ample warning."],
+    answer: "C"
+  },
+  {
+    id: 43,
+    text: "All else equal, a stock dividend will ________ the number of shares outstanding and ________ the value per share.",
+    options: ["A) increase; increase", "B) increase; decrease", "C) not change; increase", "D) decrease; increase", "E) decrease; decrease"],
+    answer: "B"
+  },
+  {
+    id: 44,
+    text: "A small stock dividend is generally defined as a stock dividend of less than ________ percent.",
+    options: ["A) 10 to 15", "B) 15 to 20", "C) 20 to 25", "D) 25 to 30", "E) 30 to 35"],
+    answer: "C"
+  },
+  {
+    id: 45,
+    text: "A stock split:",
+    options: ["A) increases the total book value of the common stock account.", "B) decreases the book value of the retained earnings account.", "C) does not affect the total book value of any of the equity accounts.", "D) increases the book value of the capital in excess of par account.", "E) decreases the total owners' equity on the balance sheet."],
+    answer: "C"
+  },
+  {
+    id: 46,
+    text: "Stock splits are often used to:",
+    options: ["A) adjust the market price of a stock such that it falls within a preferred trading range.", "B) decrease the excess cash held by a firm.", "C) increase both the number of shares outstanding and the market price per share.", "D) increase the total equity of a firm.", "E) adjust the debt-equity ratio such that it falls within a preferred range."],
+    answer: "A"
+  },
+  {
+    id: 47,
+    text: "Wydex stock is currently trading at $82 a share. The firm feels that its primary clientele can afford to spend between $2,000 and $2,500 to purchase a round lot of 100 shares. The firm should consider a:",
+    options: ["A) reverse stock split.", "B) liquidating dividend.", "C) stock dividend.", "D) stock split.", "E) special dividend."],
+    answer: "D"
+  },
+  {
+    id: 48,
+    text: "A one-for-four reverse stock split will:",
+    options: ["A) increase the par value by 25 percent.", "B) increase the number of shares outstanding by 400 percent.", "C) increase the market value but not affect the par value per share.", "D) increase a $1 par value to $4.", "E) increase a $1 par value by $4."],
+    answer: "D"
+  },
+  {
+    id: 49,
+    text: "Probably the best argument for a reverse stock split is to:",
+    options: ["A) decrease the liquidity of a stock.", "B) decrease the market value per share.", "C) increase the number of stockholders.", "D) maintain a minimum share price as set by a stock exchange.", "E) raise additional capital from current stockholders."],
+    answer: "D"
+  },
+  {
+    id: 50,
+    text: "A ________ will increase the number of shares outstanding without affecting the book value of any of the owners' equity account values.",
+    options: ["A) special dividend", "B) stock split", "C) share repurchase", "D) tender offer", "E) liquidating dividend"],
+    answer: "B"
+  },
+  {
+    id: 51,
+    text: "In a reverse stock split the:",
+    options: ["A) number of shares outstanding increases and the owners' equity decreases.", "B) firm buys back existing shares of stock on the open market.", "C) firm sells new shares of stock on the open market.", "D) number of shares outstanding decreases while the book value of owners' equity is unchanged.", "E) shareholders make a cash payment to the firm."],
+    answer: "D"
+  }
+];
+
+let currentFilter = 'all';
+let flagged = JSON.parse(localStorage.getItem('ch19_flagged') || '[]');
+
+function saveFlagged() {
+  localStorage.setItem('ch19_flagged', JSON.stringify(flagged));
+}
+
+function updateFlagCount() {
+  document.getElementById('flagCount').textContent = flagged.length;
+}
+
+function toggleFlag(id) {
+  const idx = flagged.indexOf(id);
+  if (idx === -1) flagged.push(id);
+  else flagged.splice(idx, 1);
+  saveFlagged();
+  updateFlagCount();
+  const card = document.querySelector(`.q-card[data-id="${id}"]`);
+  if (card) {
+    card.classList.toggle('flagged', flagged.includes(id));
+    applyFilter(card, id);
+  }
+}
+
+function applyFilter(card, id) {
+  if (currentFilter === 'flagged') {
+    card.dataset.hidden = !flagged.includes(id);
+  } else {
+    card.dataset.hidden = false;
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  let anyVisible = false;
+  document.querySelectorAll('.q-card').forEach(card => {
+    const id = parseInt(card.dataset.id);
+    const hidden = f === 'flagged' && !flagged.includes(id);
+    card.dataset.hidden = hidden;
+    if (!hidden) anyVisible = true;
+  });
+  document.getElementById('emptyState').classList.toggle('visible', !anyVisible && f === 'flagged');
+}
+
+function renderQuestions() {
+  const list = document.getElementById('questionList');
+  list.innerHTML = '';
+  questions.forEach(q => {
+    const isFlagged = flagged.includes(q.id);
+    const card = document.createElement('div');
+    card.className = 'q-card' + (isFlagged ? ' flagged' : '');
+    card.dataset.id = q.id;
+    card.dataset.hidden = false;
+
+    const optionsHTML = q.options.map(o => {
+      const letter = o[0];
+      const rest = o.slice(2).trim();
+      return `<div class="q-option"><span class="opt-letter">${letter})</span>${rest}</div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="q-top">
+        <button class="flag-btn" onclick="toggleFlag(${q.id})" title="標記為容易出錯">🚩</button>
+        <div class="q-num">Q${String(q.id).padStart(2,'0')}</div>
+        <div class="q-answer-wrap">
+          <span class="q-answer" title="滑鼠移至此處或反白查看答案">${q.answer}</span>
+        </div>
+        <div class="q-text">${q.text.replace(/\n/g, '<br>')}</div>
+        <span class="flag-tag">容易出錯</span>
+      </div>
+      <div class="q-divider" style="margin-top:10px;"></div>
+      <div class="q-options">${optionsHTML}</div>
+    `;
+    list.appendChild(card);
+  });
+  updateFlagCount();
+}
+
+renderQuestions();
+</script>
+</body>
+</html>

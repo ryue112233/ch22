@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch13 Return, Risk, and the Security Market Line</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #ffffff;
+    --surface2: #f0ece3;
+    --border: #ddd8cc;
+    --text: #1a1714;
+    --text-muted: #7a7268;
+    --accent: #c0392b;
+    --accent-soft: #fdf0ee;
+    --flag-active: #e67e22;
+    --flag-border: #f39c12;
+    --flag-bg: #fef9f0;
+    --answer-hidden: #f5f2ec;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--text);
+    color: #f5f2ec;
+    padding: 32px 40px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  header h1 {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  header .meta {
+    font-size: 0.7rem;
+    color: #a09890;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .flag-count {
+    font-size: 0.72rem;
+    color: var(--flag-border);
+    white-space: nowrap;
+  }
+
+  /* ── Filter tabs ── */
+  .filter-bar {
+    display: flex;
+    gap: 4px;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 6px 14px;
+    border: 1px solid #444;
+    background: transparent;
+    color: #c0b8b0;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .filter-btn:hover:not(.active) {
+    border-color: #888;
+    color: #f5f2ec;
+  }
+
+  /* ── Main ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ── Question card ── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+  }
+
+  .q-card.flagged {
+    border-color: var(--flag-border);
+    border-left: 4px solid var(--flag-active);
+    background: var(--flag-bg);
+  }
+
+  .q-card[data-hidden="true"] {
+    display: none;
+  }
+
+  /* Card top row */
+  .q-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 14px 16px 0 16px;
+  }
+
+  /* Flag button */
+  .flag-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 10px 0 0;
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .flag-btn:hover { color: var(--flag-active); transform: scale(1.2); }
+  .flagged .flag-btn { color: var(--flag-active); }
+
+  /* Question number */
+  .q-num {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    padding-top: 2px;
+    min-width: 36px;
+  }
+
+  /* Answer badge */
+  .q-answer-wrap {
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .q-answer {
+    display: inline-block;
+    min-width: 28px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    background: var(--answer-hidden);
+    color: var(--answer-hidden);
+    border: 1px solid #e0dbd2;
+    transition: color 0.2s;
+    user-select: text;
+    cursor: default;
+  }
+
+  .q-card:hover .q-answer,
+  .q-answer:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Question text */
+  .q-text {
+    flex: 1;
+    font-family: var(--serif);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  /* Flag tag */
+  .flag-tag {
+    display: none;
+    font-size: 0.62rem;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--flag-active);
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid var(--flag-border);
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .flagged .flag-tag { display: inline-block; }
+
+  /* Options grid */
+  .q-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    padding: 10px 16px 14px 56px;
+  }
+
+  .q-option {
+    font-family: var(--serif);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .q-option span.opt-letter {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #bbb;
+    margin-right: 4px;
+  }
+
+  /* Divider */
+  .q-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 16px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: none;
+  }
+
+  .empty-state.visible { display: block; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>Chapter 13 — Return, Risk, and the Security Market Line</h1>
+      <div class="meta">FUNDAMENTALS OF CORPORATE FINANCE 12e (Ross) &nbsp;·&nbsp; 57 Questions &nbsp;·&nbsp; Hover to reveal answers</div>
+    </div>
+    <div class="header-right">
+      <span class="flag-count">🚩 <span id="flagCount">0</span> 已標記</span>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全部題目</button>
+        <button class="filter-btn" data-filter="flagged" onclick="setFilter('flagged')">已標記</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="questionList">
+  <!-- Questions injected by JS -->
+</main>
+<div class="empty-state" id="emptyState">目前沒有已標記的題目。點擊題目左側的 🚩 旗幟來標記容易出錯的題目。</div>
+
+<script>
+const questions = [
+  {
+    id: 1,
+    text: "You own a stock that you think will produce a return of 11 percent in a good economy and 3 percent in a poor economy. Given the probabilities of each state of the economy occurring, you anticipate that your stock will earn 6.5 percent next year. Which one of the following terms applies to this 6.5 percent?",
+    options: ["A) Arithmetic return", "B) Historical return", "C) Expected return", "D) Geometric return", "E) Required return"],
+    answer: "C"
+  },
+  {
+    id: 2,
+    text: "The expected return on a stock given various states of the economy is equal to the:",
+    options: ["A) highest expected return given any economic state.", "B) arithmetic average of the returns for each economic state.", "C) summation of the individual expected rates of return.", "D) weighted average of the returns for each economic state.", "E) return for the economic state with the highest probability of occurrence."],
+    answer: "D"
+  },
+  {
+    id: 3,
+    text: "The expected return on a stock computed using economic probabilities is:",
+    options: ["A) guaranteed to equal the actual average return on the stock for the next five years.", "B) guaranteed to be the minimal rate of return on the stock over the next two years.", "C) guaranteed to equal the actual return for the immediate twelve month period.", "D) a mathematical expectation based on a weighted average and not an actual anticipated outcome.", "E) the actual return you should anticipate as long as the economic forecast remains constant."],
+    answer: "D"
+  },
+  {
+    id: 4,
+    text: "The expected risk premium on a stock is equal to the expected return on the stock minus the:",
+    options: ["A) expected market rate of return.", "B) risk-free rate.", "C) inflation rate.", "D) standard deviation.", "E) variance."],
+    answer: "B"
+  },
+  {
+    id: 5,
+    text: "Suzie owns five different bonds and twelve different stocks. Which one of the following terms most applies to her investments?",
+    options: ["A) Index", "B) Portfolio", "C) Collection", "D) Grouping", "E) Risk-free"],
+    answer: "B"
+  },
+  {
+    id: 6,
+    text: "Steve has invested in twelve different stocks that have a combined value today of $121,300. Fifteen percent of that total is invested in Wise Man Foods. The 15 percent is a measure of which one of the following?",
+    options: ["A) Portfolio return", "B) Portfolio weight", "C) Degree of risk", "D) Price-earnings ratio", "E) Index value"],
+    answer: "B"
+  },
+  {
+    id: 7,
+    text: "The expected rate of return on a stock portfolio is a weighted average where the weights are based on the:",
+    options: ["A) number of shares owned of each stock.", "B) market price per share of each stock.", "C) market value of the investment in each stock.", "D) original amount invested in each stock.", "E) cost per share of each stock held."],
+    answer: "C"
+  },
+  {
+    id: 8,
+    text: "The expected return on a portfolio considers which of the following factors?\nI. Percentage of the portfolio invested in each individual security\nII. Projected states of the economy\nIII. The performance of each security given various economic states\nIV. Probability of occurrence for each state of the economy",
+    options: ["A) I and III only", "B) II and IV only", "C) I, III, and IV only", "D) II, III, and IV only", "E) I, II, III, and IV"],
+    answer: "E"
+  },
+  {
+    id: 9,
+    text: "The expected return on a portfolio:\nI. can never exceed the expected return of the best performing security in the portfolio.\nII. must be equal to or greater than the expected return of the worst performing security in the portfolio.\nIII. is independent of the unsystematic risks of the individual securities held in the portfolio.\nIV. is independent of the allocation of the portfolio amongst individual securities.",
+    options: ["A) I and III only", "B) II and IV only", "C) I and II only", "D) I, II, and III only", "E) I, II, III, and IV"],
+    answer: "D"
+  },
+  {
+    id: 10,
+    text: "If a stock portfolio is well diversified, then the portfolio variance:",
+    options: ["A) will equal the variance of the most volatile stock in the portfolio.", "B) may be less than the variance of the least risky stock in the portfolio.", "C) must be equal to or greater than the variance of the least risky stock in the portfolio.", "D) will be a weighted average of the variances of the individual securities in the portfolio.", "E) will be an arithmetic average of the variances of the individual securities in the portfolio."],
+    answer: "B"
+  },
+  {
+    id: 11,
+    text: "The standard deviation of a portfolio:",
+    options: ["A) is a weighted average of the standard deviations of the individual securities held in the portfolio.", "B) can never be less than the standard deviation of the most risky security in the portfolio.", "C) must be equal to or greater than the lowest standard deviation of any single security held in the portfolio.", "D) is an arithmetic average of the standard deviations of the individual securities which comprise the portfolio.", "E) can be less than the standard deviation of the least risky security in the portfolio."],
+    answer: "E"
+  },
+  {
+    id: 12,
+    text: "The standard deviation of a portfolio:",
+    options: ["A) is a measure of that portfolio's systematic risk.", "B) is a weighted average of the standard deviations of the individual securities held in that portfolio.", "C) measures the amount of diversifiable risk inherent in the portfolio.", "D) serves as the basis for computing the appropriate risk premium for that portfolio.", "E) can be less than the weighted average of the standard deviations of the individual securities held in that portfolio."],
+    answer: "E"
+  },
+  {
+    id: 13,
+    text: "Which one of the following statements is correct concerning a portfolio of 20 securities with multiple states of the economy when both the securities and the economic states have unequal weights?",
+    options: ["A) Given the unequal weights of both the securities and the economic states, the standard deviation of the portfolio must equal that of the overall market.", "B) The weights of the individual securities have no effect on the expected return of a portfolio when multiple states of the economy are involved.", "C) Changing the probabilities of occurrence for the various economic states will not affect the expected standard deviation of the portfolio.", "D) The standard deviation of the portfolio will be greater than the highest standard deviation of any single security in the portfolio given that the individual securities are well diversified.", "E) Given both the unequal weights of the securities and the economic states, an investor might be able to create a portfolio that has an expected standard deviation of zero."],
+    answer: "E"
+  },
+  {
+    id: 14,
+    text: "Which one of the following events would be included in the expected return on Sussex stock?",
+    options: ["A) The chief financial officer of Sussex unexpectedly resigned.", "B) The labor union representing Sussex's employees unexpectedly called a strike.", "C) This morning, Sussex confirmed that its CEO is retiring at the end of the year as was anticipated.", "D) The price of Sussex stock suddenly declined in value because researchers accidentally discovered that one of the firm's products can be toxic to household pets.", "E) The board of directors made an unprecedented decision to give sizeable bonuses to the firm's internal auditors for their efforts in uncovering wasteful spending."],
+    answer: "C"
+  },
+  {
+    id: 15,
+    text: "Which one of the following statements is correct?",
+    options: ["A) The unexpected return is always negative.", "B) The expected return minus the unexpected return is equal to the total return.", "C) Over time, the average return is equal to the unexpected return.", "D) The expected return includes the surprise portion of news announcements.", "E) Over time, the average unexpected return will be zero."],
+    answer: "E"
+  },
+  {
+    id: 16,
+    text: "Which one of the following statements related to unexpected returns is correct?",
+    options: ["A) All announcements by a firm affect that firm's unexpected returns.", "B) Unexpected returns over time have a negative effect on the total return of a firm.", "C) Unexpected returns are relatively predictable in the short-term.", "D) Unexpected returns generally cause the actual return to vary significantly from the expected return over the long-term.", "E) Unexpected returns can be either positive or negative in the short term but tend to be zero over the long-term."],
+    answer: "E"
+  },
+  {
+    id: 17,
+    text: "Which one of the following is an example of systematic risk?",
+    options: ["A) Investors panic causing security prices around the globe to fall precipitously", "B) A flood washes away a firm's warehouse", "C) A city imposes an additional one percent sales tax on all products", "D) A toymaker has to recall its top-selling toy", "E) Corn prices increase due to increased demand for alternative fuels"],
+    answer: "A"
+  },
+  {
+    id: 18,
+    text: "Unsystematic risk:",
+    options: ["A) can be effectively eliminated by portfolio diversification.", "B) is compensated for by the risk premium.", "C) is measured by beta.", "D) is measured by standard deviation.", "E) is related to the overall economy."],
+    answer: "A"
+  },
+  {
+    id: 19,
+    text: "Which one of the following is an example of unsystematic risk?",
+    options: ["A) An across the board increase in income taxes", "B) Adoption of a national sales tax", "C) Decrease in the national level of inflation", "D) An increased feeling of global prosperity", "E) National decrease in consumer spending on entertainment"],
+    answer: "E"
+  },
+  {
+    id: 20,
+    text: "Which one of the following is a risk that applies to most securities?",
+    options: ["A) Unsystematic", "B) Diversifiable", "C) Systematic", "D) Asset-specific", "E) Industry"],
+    answer: "C"
+  },
+  {
+    id: 21,
+    text: "A news flash just appeared that caused about a dozen stocks to suddenly increase in value by 12 percent. What type of risk does this news flash best represent?",
+    options: ["A) Portfolio", "B) Non-diversifiable", "C) Market", "D) Unsystematic", "E) Expected"],
+    answer: "D"
+  },
+  {
+    id: 22,
+    text: "The principle of diversification tells us that:",
+    options: ["A) concentrating an investment in two or three large stocks will eliminate all of the unsystematic risk.", "B) concentrating an investment in three companies all within the same industry will greatly reduce the systematic risk.", "C) spreading an investment across five diverse companies will not lower the total risk.", "D) spreading an investment across many diverse assets will eliminate all of the systematic risk.", "E) spreading an investment across many diverse assets will eliminate some of the total risk."],
+    answer: "E"
+  },
+  {
+    id: 23,
+    text: "Which one of the following is least apt to reduce the unsystematic risk of a portfolio?",
+    options: ["A) Reducing the number of stocks held in a portfolio", "B) Adding bonds to a stock portfolio", "C) Adding international securities into a portfolio of U.S. stocks", "D) Adding U.S. Treasury bills to a risky portfolio", "E) Adding technology stocks to a portfolio of industrial stocks"],
+    answer: "A"
+  },
+  {
+    id: 24,
+    text: "Which one of the following statements related to risk is correct?",
+    options: ["A) The beta of a portfolio must increase when a stock with a high standard deviation is added to the portfolio.", "B) Every portfolio that contains 25 or more securities is free of unsystematic risk.", "C) The systematic risk of a portfolio can be effectively lowered by adding T-bills to the portfolio.", "D) Adding five additional stocks to a diversified portfolio will lower the portfolio's beta.", "E) Stocks that move in tandem with the overall market have zero betas."],
+    answer: "C"
+  },
+  {
+    id: 25,
+    text: "Which one of the following risks is irrelevant to a well-diversified investor?",
+    options: ["A) Systematic risk", "B) Unsystematic risk", "C) Market risk", "D) Non-diversifiable risk", "E) Systematic portion of a surprise"],
+    answer: "B"
+  },
+  {
+    id: 26,
+    text: "Which of the following are examples of diversifiable risk?\nI. An earthquake damages an entire town\nII. The federal government imposes a $100 fee on all business entities\nIII. Employment taxes increase nationally\nIV. All toymakers are required to improve their safety standards",
+    options: ["A) I and III only", "B) II and IV only", "C) II and III only", "D) I and IV only", "E) I, III, and IV only"],
+    answer: "D"
+  },
+  {
+    id: 27,
+    text: "Which one of the following is the best example of a diversifiable risk?",
+    options: ["A) Interest rates increase", "B) Energy costs increase", "C) Core inflation increases", "D) A firm's sales decrease", "E) Taxes decrease"],
+    answer: "D"
+  },
+  {
+    id: 28,
+    text: "The primary purpose of portfolio diversification is to:",
+    options: ["A) increase returns and risks.", "B) eliminate all risks.", "C) eliminate asset-specific risk.", "D) eliminate systematic risk.", "E) lower both returns and risks."],
+    answer: "C"
+  },
+  {
+    id: 29,
+    text: "Which one of the following indicates a portfolio is being effectively diversified?",
+    options: ["A) An increase in the portfolio beta", "B) A decrease in the portfolio beta", "C) An increase in the portfolio rate of return", "D) An increase in the portfolio standard deviation", "E) A decrease in the portfolio standard deviation"],
+    answer: "E"
+  },
+  {
+    id: 30,
+    text: "How many diverse securities are required to eliminate the majority of the diversifiable risk from a portfolio?",
+    options: ["A) 5", "B) 10", "C) 2", "D) 40", "E) 75"],
+    answer: "B"
+  },
+  {
+    id: 31,
+    text: "Which of the following statements concerning risk are correct?\nI. Non-diversifiable risk is measured by beta.\nII. The risk premium increases as diversifiable risk increases.\nIII. Systematic risk is another name for non-diversifiable risk.\nIV. Diversifiable risks are market risks you cannot avoid.",
+    options: ["A) I and III only", "B) II and IV only", "C) I and II only", "D) III and IV only", "E) I, II, and III only"],
+    answer: "A"
+  },
+  {
+    id: 32,
+    text: "Which of the following statements are correct concerning diversifiable risks?\nI. Diversifiable risks can be essentially eliminated by investing in 30 unrelated securities.\nII. There is no reward for accepting diversifiable risks.\nIII. Diversifiable risks are generally associated with an individual firm or industry.\nIV. Beta measures diversifiable risk.",
+    options: ["A) I and III only", "B) II and IV only", "C) I and IV only", "D) I, II and III only", "E) I, II, III, and IV"],
+    answer: "D"
+  },
+  {
+    id: 33,
+    text: "Which one of the following statements is correct concerning unsystematic risk?",
+    options: ["A) An investor is rewarded for assuming unsystematic risk.", "B) Eliminating unsystematic risk is the responsibility of the individual investor.", "C) Unsystematic risk is rewarded when it exceeds the market level of unsystematic risk.", "D) Beta measures the level of unsystematic risk inherent in an individual security.", "E) Standard deviation is a measure of unsystematic risk."],
+    answer: "B"
+  },
+  {
+    id: 34,
+    text: "Systematic risk is measured by:",
+    options: ["A) the mean.", "B) beta.", "C) the geometric average.", "D) the standard deviation.", "E) the arithmetic average."],
+    answer: "B"
+  },
+  {
+    id: 35,
+    text: "Which one of the following statements is correct concerning a portfolio beta?",
+    options: ["A) Portfolio betas range between −1.0 and +1.0.", "B) A portfolio beta is a weighted average of the betas of the individual securities contained in the portfolio.", "C) A portfolio beta cannot be computed from the betas of the individual securities comprising the portfolio because some risk is eliminated via diversification.", "D) A portfolio of U.S. Treasury bills will have a beta of +1.0.", "E) The beta of a market portfolio is equal to zero."],
+    answer: "B"
+  },
+  {
+    id: 36,
+    text: "The systematic risk of the market is measured by a:",
+    options: ["A) beta of 1.", "B) beta of 0.", "C) standard deviation of 1.", "D) standard deviation of 0.", "E) variance of 1."],
+    answer: "A"
+  },
+  {
+    id: 37,
+    text: "Total risk is measured by ________ and systematic risk is measured by ________.",
+    options: ["A) beta; alpha", "B) beta; standard deviation", "C) alpha; beta", "D) standard deviation; beta", "E) standard deviation; variance"],
+    answer: "D"
+  },
+  {
+    id: 38,
+    text: "The ________ tells us that the expected return on a risky asset depends only on that asset's nondiversifiable risk.",
+    options: ["A) efficient markets hypothesis", "B) systematic risk principle", "C) open markets theorem", "D) law of one price", "E) principle of diversification"],
+    answer: "B"
+  },
+  {
+    id: 39,
+    text: "Which one of the following measures the amount of systematic risk present in a particular risky asset relative to the systematic risk present in an average risky asset?",
+    options: ["A) Beta", "B) Reward-to-risk ratio", "C) Risk ratio", "D) Standard deviation", "E) Price-earnings ratio"],
+    answer: "A"
+  },
+  {
+    id: 40,
+    text: "Which one of the following is most directly affected by the level of systematic risk in a security?",
+    options: ["A) Variance of the returns", "B) Standard deviation of the returns", "C) Expected rate of return", "D) Risk-free rate", "E) Market risk premium"],
+    answer: "C"
+  },
+  {
+    id: 41,
+    text: "At a minimum, which of the following would you need to know to estimate the amount of additional reward you will receive for purchasing a risky asset instead of a risk-free asset?\nI. Asset's standard deviation\nII. Asset's beta\nIII. Risk-free rate of return\nIV. Market risk premium",
+    options: ["A) I and III only", "B) II and IV only", "C) III and IV only", "D) I, III, and IV only", "E) I, II, III, and IV"],
+    answer: "B"
+  },
+  {
+    id: 42,
+    text: "Which one of the following is a positively sloped linear function that is created when expected returns are graphed against security betas?",
+    options: ["A) Reward-to-risk matrix", "B) Portfolio weight graph", "C) Normal distribution", "D) Security market line", "E) Market real returns"],
+    answer: "D"
+  },
+  {
+    id: 43,
+    text: "Which one of the following is represented by the slope of the security market line?",
+    options: ["A) Reward-to-risk ratio", "B) Market standard deviation", "C) Beta coefficient", "D) Risk-free interest rate", "E) Market risk premium"],
+    answer: "E"
+  },
+  {
+    id: 44,
+    text: "Which one of the following is the formula that explains the relationship between the expected return on a security and the level of that security's systematic risk?",
+    options: ["A) Capital asset pricing model", "B) Time value of money equation", "C) Unsystematic risk equation", "D) Market performance equation", "E) Expected risk formula"],
+    answer: "A"
+  },
+  {
+    id: 45,
+    text: "The intercept point of the security market line is the rate of return which corresponds to:",
+    options: ["A) the risk-free rate.", "B) the market rate.", "C) a return of zero.", "D) a return of 1.0 percent.", "E) the market risk premium."],
+    answer: "A"
+  },
+  {
+    id: 46,
+    text: "A stock with an actual return that lies above the security market line has:",
+    options: ["A) more systematic risk than the overall market.", "B) more risk than that warranted by CAPM.", "C) a higher return than expected for the level of risk assumed.", "D) less systematic risk than the overall market.", "E) a return equivalent to the level of risk assumed."],
+    answer: "C"
+  },
+  {
+    id: 47,
+    text: "Standard deviation measures which type of risk?",
+    options: ["A) Total", "B) Non-diversifiable", "C) Unsystematic", "D) Systematic", "E) Economic"],
+    answer: "A"
+  },
+  {
+    id: 48,
+    text: "Assume the market rate of return is 10.1 percent and the risk-free rate of return is 3.2 percent. Lexant stock has 2 percent less systematic risk than the market and has an actual return of 10.2 percent. This stock:",
+    options: ["A) is underpriced.", "B) is correctly priced.", "C) will plot below the security market line.", "D) will plot on the security market line.", "E) will plot to the right of the overall market on a security market line graph."],
+    answer: "A"
+  },
+  {
+    id: 49,
+    text: "Which one of the following will be constant for all securities if the market is efficient and securities are priced fairly?",
+    options: ["A) Variance", "B) Standard deviation", "C) Reward-to-risk ratio", "D) Beta", "E) Risk premium"],
+    answer: "C"
+  },
+  {
+    id: 50,
+    text: "The reward-to-risk ratio for Stock A is less than the reward-to-risk ratio of Stock B. Stock A has a beta of .82 and Stock B has a beta of 1.29. This information implies that:",
+    options: ["A) Stock A is riskier than Stock B and both stocks are fairly priced.", "B) Stock A is less risky than Stock B and both stocks are fairly priced.", "C) either Stock A is underpriced or Stock B is overpriced or both.", "D) either Stock A is overpriced or Stock B is underpriced or both.", "E) both Stock A and Stock B are correctly priced since Stock A is less risky than Stock B."],
+    answer: "D"
+  },
+  {
+    id: 51,
+    text: "The market risk premium is computed by:",
+    options: ["A) adding the risk-free rate of return to the inflation rate.", "B) adding the risk-free rate of return to the market rate of return.", "C) subtracting the risk-free rate of return from the inflation rate.", "D) subtracting the risk-free rate of return from the market rate of return.", "E) multiplying the risk-free rate of return by a beta of 1.0."],
+    answer: "D"
+  },
+  {
+    id: 52,
+    text: "The excess return earned by an asset that has a beta of 1.34 over that earned by a risk-free asset is referred to as the:",
+    options: ["A) market risk premium.", "B) risk premium.", "C) systematic return.", "D) total return.", "E) real rate of return."],
+    answer: "B"
+  },
+  {
+    id: 53,
+    text: "The ________ of a security divided by the beta of that security is equal to the slope of the security market line if the security is priced fairly.",
+    options: ["A) real return", "B) actual return", "C) nominal return", "D) risk premium", "E) expected return"],
+    answer: "D"
+  },
+  {
+    id: 54,
+    text: "The capital asset pricing model (CAPM) assumes which of the following?\nI. A risk-free asset has no systematic risk.\nII. Beta is a reliable estimate of total risk.\nIII. The reward-to-risk ratio is constant.\nIV. The market rate of return can be approximated.",
+    options: ["A) I and III only", "B) II and IV only", "C) I, III, and IV only", "D) II, III, and IV only", "E) I, II, III, and IV"],
+    answer: "C"
+  },
+  {
+    id: 55,
+    text: "According to CAPM, the amount of reward an investor receives for bearing the risk of an individual security depends upon the:",
+    options: ["A) amount of total risk assumed and the market risk premium.", "B) market risk premium and the amount of systematic risk inherent in the security.", "C) risk-free rate, the market rate of return, and the standard deviation of the security.", "D) beta of the security and the market rate of return.", "E) standard deviation of the security and the risk-free rate of return."],
+    answer: "B"
+  },
+  {
+    id: 56,
+    text: "Which one of the following should earn the highest risk premium based on CAPM?",
+    options: ["A) Diversified portfolio with returns similar to the overall market", "B) Stock with a beta of 1.38", "C) Stock with a beta of .74", "D) U.S. Treasury bill", "E) Portfolio with a beta of 1.01"],
+    answer: "B"
+  },
+  {
+    id: 57,
+    text: "Treynor Industries is investing in a new project. The minimum rate of return the firm requires on this project is referred to as the:",
+    options: ["A) average arithmetic return.", "B) expected return.", "C) market rate of return.", "D) internal rate of return.", "E) cost of capital."],
+    answer: "E"
+  }
+];
+
+let currentFilter = 'all';
+let flagged = JSON.parse(localStorage.getItem('ch13_flagged') || '[]');
+
+function saveFlagged() {
+  localStorage.setItem('ch13_flagged', JSON.stringify(flagged));
+}
+
+function updateFlagCount() {
+  document.getElementById('flagCount').textContent = flagged.length;
+}
+
+function toggleFlag(id) {
+  const idx = flagged.indexOf(id);
+  if (idx === -1) flagged.push(id);
+  else flagged.splice(idx, 1);
+  saveFlagged();
+  updateFlagCount();
+
+  const card = document.querySelector(`.q-card[data-id="${id}"]`);
+  if (card) {
+    card.classList.toggle('flagged', flagged.includes(id));
+    applyFilter(card, id);
+  }
+}
+
+function applyFilter(card, id) {
+  if (currentFilter === 'flagged') {
+    card.dataset.hidden = !flagged.includes(id);
+  } else {
+    card.dataset.hidden = false;
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+
+  let anyVisible = false;
+  document.querySelectorAll('.q-card').forEach(card => {
+    const id = parseInt(card.dataset.id);
+    const hidden = f === 'flagged' && !flagged.includes(id);
+    card.dataset.hidden = hidden;
+    if (!hidden) anyVisible = true;
+  });
+
+  const empty = document.getElementById('emptyState');
+  empty.classList.toggle('visible', !anyVisible && f === 'flagged');
+}
+
+function renderQuestions() {
+  const list = document.getElementById('questionList');
+  list.innerHTML = '';
+
+  questions.forEach(q => {
+    const isFlagged = flagged.includes(q.id);
+
+    const card = document.createElement('div');
+    card.className = 'q-card' + (isFlagged ? ' flagged' : '');
+    card.dataset.id = q.id;
+    card.dataset.hidden = false;
+
+    // Split options into letter + rest
+    const optionsHTML = q.options.map(o => {
+      const letter = o[0];
+      const rest = o.slice(2).trim();
+      return `<div class="q-option"><span class="opt-letter">${letter})</span>${rest}</div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="q-top">
+        <button class="flag-btn" onclick="toggleFlag(${q.id})" title="標記為容易出錯">🚩</button>
+        <div class="q-num">Q${String(q.id).padStart(2,'0')}</div>
+        <div class="q-answer-wrap">
+          <span class="q-answer" title="滑鼠移至此處或反白查看答案">${q.answer}</span>
+        </div>
+        <div class="q-text">${q.text.replace(/\n/g, '<br>')}</div>
+        <span class="flag-tag">容易出錯</span>
+      </div>
+      <div class="q-divider" style="margin-top:10px;"></div>
+      <div class="q-options">${optionsHTML}</div>
+    `;
+
+    list.appendChild(card);
+  });
+
+  updateFlagCount();
+}
+
+renderQuestions();
+</script>
+</body>
+</html>

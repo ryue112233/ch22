@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 22: Options and Corporate Finance 考古題複習系統</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --primary-color: #0d6efd;
+            --border-color: #dee2e6;
+            --flagged-bg: #fff3cd;
+            --flagged-border: #ffc107;
+            --flagged-color: #856404;
+            --hover-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            color: #1a1a1a;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #6c757d;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 控制列 */
+        .controls {
+            background-color: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .filter-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            color: #495057;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .stats {
+            font-size: 14px;
+            font-weight: bold;
+            color: #495057;
+            background-color: #e2e3e5;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        /* 題目清單區 */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 單題卡片橫向佈局 */
+        .q-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: flex-start;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+        }
+
+        .q-card:hover {
+            box-shadow: var(--hover-shadow);
+        }
+
+        /* 已標記容易出錯的視覺狀態 */
+        .q-card.flagged {
+            background-color: var(--flagged-bg);
+            border-color: var(--flagged-border);
+        }
+
+        /* 左側按鈕與題號區 */
+        .q-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 140px;
+            flex-shrink: 0;
+        }
+
+        .flag-btn {
+            background: none;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .flag-btn:hover {
+            background-color: #f1f3f5;
+        }
+
+        .flagged .flag-btn {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+
+        .q-num {
+            font-weight: 700;
+            font-size: 16px;
+            color: #495057;
+        }
+
+        /* 核心內容區 */
+        .q-main {
+            flex-grow: 1;
+        }
+
+        .q-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+            white-space: pre-line;
+        }
+
+        /* 選項雙欄排列 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 20px;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            font-size: 15px;
+            color: #495057;
+        }
+
+        /* 難易度標籤 */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        /* 答案區域隱藏機制 */
+        .q-right {
+            min-width: 110px;
+            text-align: right;
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        .answer-container {
+            display: inline-block;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+            color: #ffffff; /* 完全白色隐藏 */
+            user-select: text; /* 允許反白選取 */
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        /* 滑鼠移入題目整行時自動顯現答案 */
+        .q-card:hover .answer-container {
+            background-color: #e8f5e9;
+            border-color: #a5d6a7;
+            color: #2e7d32;
+        }
+
+        /* 反白選取時強制顯示（即使沒有 hover） */
+        .answer-container::selection {
+            background-color: #2e7d32;
+            color: #ffffff;
+        }
+
+        /* 錯誤警告標籤 */
+        .error-tag {
+            display: none;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--flagged-color);
+            margin-top: 5px;
+        }
+
+        .flagged .error-tag {
+            display: block;
+        }
+
+        /* 響應式：螢幕較窄時改為單欄並調整排版 */
+        @media (max-width: 768px) {
+            .q-card {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .q-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .q-right {
+                width: 100%;
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Chapter 22: Options and Corporate Finance</h1>
+        <div class="meta-info">
+            <span><strong>題型：</strong> 選擇題 (1 ~ 49)</span>
+            <span><strong>產生日期：</strong> 2026-06-08</span>
+            <span><strong>提示：</strong> 將滑鼠游標移至題目區塊，或直接滑鼠反白選取右側答案格，即可查看正確答案。</span>
+        </div>
+    </header>
+
+    <div class="controls">
+        <div class="filter-btn-group">
+            <button class="btn active" id="btn-all" onclick="filterQuestions('all')">全部題目</button>
+            <button class="btn" id="btn-flagged" onclick="filterQuestions('flagged')">已標記 (容易出錯)</button>
+        </div>
+        <div class="stats" id="flag-count-display">已標記題數：0</div>
+    </div>
+
+    <div class="question-list" id="question-container">
+        </div>
+</div>
+
+<script>
+    // 完整的 1 ~ 49 題題目資料庫
+    const rawData = [
+        { id: 1, type: "DEFINITIONS", txt: "A financial contract that gives its owner the right, but not the obligation, to buy or sell a specified asset at an agreed-upon price on or before a given future date is called a(n) ________ contract.", opts: ["a. option", "b. futures", "c. forward", "d. swap", "e. straddle"], ans: "a", diff: "Easy" },
+        { id: 2, type: "OPTION EXERCISE", txt: "The act where an owner of an option buys or sells the underlying asset, as is his right, is called ________ the option.", opts: ["a. striking", "b. exercising", "c. opening", "d. splitting", "e. strangling"], ans: "b", diff: "Easy" },
+        { id: 3, type: "STRIKE PRICE", txt: "The fixed price in an option contract at which the owner can buy or sell the underlying asset is called the option's:", opts: ["a. opening price.", "b. intrinsic value.", "c. strike price.", "d. market price.", "e. time value."], ans: "c", diff: "Easy" },
+        { id: 4, type: "EXPIRATION DATE", txt: "The last day on which an owner of an option can elect to exercise is the ________ date.", opts: ["a. ex-payment", "b. ex-option", "c. opening", "d. expiration", "e. intrinsic"], ans: "d", diff: "Easy" },
+        { id: 5, type: "AMERICAN OPTIONS", txt: "An option that may be exercised at any time up its expiration date is called a(n) ________ option.", opts: ["a. futures", "b. Asian", "c. Bermudan", "d. European", "e. American"], ans: "e", diff: "Easy" },
+        { id: 6, type: "EUROPEAN OPTIONS", txt: "An option that may be exercised only on the expiration date is called a(n) ________ option.", opts: ["a. European", "b. American", "c. Bermudan", "d. futures", "e. Asian"], ans: "a", diff: "Easy" },
+        { id: 7, type: "CALL OPTION", txt: "A ________ is a derivative security that gives the owner the right, but not the obligation, to buy an asset at a fixed price for a specified period of time.", opts: ["a. futures contract", "b. call option", "c. put option", "d. swap", "e. forward contract"], ans: "b", diff: "Easy" },
+        { id: 8, type: "PUT OPTION", txt: "A ________ is a derivative security that gives the owner the right, but not the obligation, to sell an asset at a fixed price for a specified period of time.", opts: ["a. futures contract", "b. call option", "c. put option", "d. swap", "e. forward contract"], ans: "c", diff: "Easy" },
+        { id: 9, type: "ARBITRAGE", txt: "A trading opportunity that offers a riskless profit is called a(n):", opts: ["a. put option.", "b. call option.", "c. market equilibrium.", "d. arbitrage.", "e. cross-hedge."], ans: "d", diff: "Easy" },
+        { id: 10, type: "INTRINSIC VALUE", txt: "The value of an option if it were to immediately expire, that is, its lower pricing bound, is called an option's ________ value.", opts: ["a. strike", "b. market", "c. volatility", "d. time", "e. intrinsic"], ans: "e", diff: "Easy" },
+        { id: 11, type: "PUT-CALL PARITY", txt: "The relationship between the prices of the underlying stock, a call option, a put option, and a riskless asset is referred to as the ________ relationship.", opts: ["a. put-call parity", "b. covered call", "c. protective put", "d. straddle", "e. strangle"], ans: "a", diff: "Medium" },
+        { id: 12, type: "OPTION DELTA", txt: "The effect on an option's value of a small change in the value of the underlying asset is called the option:", opts: ["a. theta.", "b. vega.", "c. rho.", "d. delta.", "e. gamma."], ans: "d", diff: "Medium" },
+        { id: 13, type: "PUT OPTION", txt: "An option that grants the right, but not the obligation, to sell shares of the underlying asset on a particular date at a specified price is called:", opts: ["a. either an American or a European option.", "b. an American call.", "c. an American put.", "d. a European put.", "e. a European call."], ans: "d", diff: "Medium" },
+        { id: 14, type: "PUT OPTION", txt: "Which one of the following provides the option of selling a stock anytime during the option period at a specified price even if the market price of the stock declines to zero?", opts: ["a. American call", "b. European call", "c. American put", "d. European put", "e. either an American or a European put"], ans: "c", diff: "Medium" },
+        { id: 15, type: "PUT-CALL PARITY", txt: "Given an exercise price E, time to maturity T and European put-call parity, the present value of the strike price E plus the call option is equal to:", opts: ["a. the current market value of the stock.", "b. the present value of the stock minus a put option.", "c. a put option minus the market value of the share of stock.", "d. the value of a U.S. Treasury bill.", "e. the share of stock plus the put option."], ans: "e", diff: "Medium" },
+        { id: 16, type: "PUT-CALL PARITY", txt: "You can realize the same value as that derived from stock ownership if you:", opts: ["a. sell a put option and invest at the risk-free rate of return.", "b. buy a call option and write a put option on a stock and also lend out funds at the risk-free rate.", "c. sell a put and buy a call on a stock as well as invest at the risk-free rate of return.", "d. lend out funds at the risk-free rate of return and sell a put option on the stock.", "e. borrow funds at the risk-free rate of return and invest the proceeds in equivalent amounts of put and call options."], ans: "c", diff: "Medium" },
+        { id: 17, type: "AMERICAN OPTIONS", txt: "Which one of the following statements correctly describes your situation as the owner of an American call option?", opts: ["a. You are obligated to buy at a set price at any time up to and including the expiration date.", "b. You have the right to sell at a set price at any time up to and including the expiration date.", "c. You are obligated to sell at a set price if the option is exercised.", "d. You have the right to buy at a set price only on the expiration date.", "e. You have the right to buy at a set price at any time up to and including the expiration date."], ans: "e", diff: "Medium" },
+        { id: 18, type: "AMERICAN OPTIONS", txt: "Jeff opted to exercise his August option on August 10 and received $2,500 in exchange for his shares. Jeff must have owned a (an):", opts: ["a. warrant.", "b. American call.", "c. American put.", "d. European call.", "e. European put."], ans: "c", diff: "Medium" },
+        { id: 19, type: "EUROPEAN OPTIONS", txt: "Jillian owns an option which gives her the right to purchase shares of WAN stock at a price of $20 a share. Currently, WAN stock is selling for $24.50. Jillian would like to profit on this stock but is not permitted to exercise her option for another two weeks. Which of the following statements apply to this situation?\nI. Jillian must own a European call option.\nII. Jillian must own an American put option.\nIII. Jillian should sell her option today if she feels the price of WAN stock will decline significantly over the next two weeks.\nIV. Jillian cannot profit today from the price increase in WAN stock.", opts: ["a. I and III only", "b. II and IV only", "c. I and IV only", "d. II and III only", "e. I, III, and IV only"], ans: "a", diff: "Medium" },
+        { id: 20, type: "EUROPEAN OPTIONS", txt: "The difference between an American call and a European call is that the American call:", opts: ["a. has a fixed exercise price while the European exercise price can vary within a small range.", "b. is a right to buy while a European call is an obligation to buy.", "c. has an expiration date while the European call does not.", "d. is written on 100 shares of the underlying security while the European call covers 1,000 shares.", "e. can be exercised at any time up to the expiration date while the European call can only be exercised on the expiration date."], ans: "e", diff: "Medium" },
+        { id: 21, type: "CALL EXPIRATION VALUE", txt: "If a call has a positive intrinsic value at expiration the call is said to be:", opts: ["a. funded.", "b. unfunded.", "c. at the money.", "d. in the money.", "e. out of the money."], ans: "d", diff: "Medium" },
+        { id: 22, type: "PUT EXPIRATION VALUE", txt: "A 35 put option on ABC stock expires today. The current price of ABC stock is $36. The put is:", opts: ["a. funded.", "b. unfunded.", "c. at the money.", "d. in the money.", "e. out of the money."], ans: "e", diff: "Medium" },
+        { id: 23, type: "CALL UPPER BOUND", txt: "The maximum value of a call option is equal to:", opts: ["a. the strike price minus the initial cost of the option.", "b. the exercise price plus the price of the underlying stock.", "c. the strike price.", "d. the price of the underlying stock.", "e. the purchase price."], ans: "d", diff: "Medium" },
+        { id: 24, type: "CALL LOWER BOUND", txt: "The lower bound on a call's value is either the:", opts: ["a. strike price or zero, whichever is greater.", "b. stock price minus the exercise price or zero, whichever is greater.", "c. strike price or zero, whichever is lower.", "d. strike price or the stock price, whichever is lower.", "e. stock price minus the exercise price or zero, whichever is lower."], ans: "b", diff: "Medium" },
+        { id: 25, type: "CALL LOWER BOUND", txt: "The lower bound of a call option:", opts: ["a. can be a negative value regardless of the stock or exercise prices.", "b. can be a negative value but only when the exercise price exceeds the stock price.", "c. can be a negative value but only when the stock price exceeds the exercise price.", "d. must be greater than zero.", "e. can be equal to zero."], ans: "e", diff: "Medium" },
+        { id: 26, type: "CALL INTRINSIC VALUE", txt: "The intrinsic value of a call is:\nI. the value of the call if it were about to expire.\nII. equal to the lower bound of a call's value.\nIII. another name for the market price of a call.\nIV. always equal to zero if the call is currently out of the money.", opts: ["a. I and III only", "b. II and IV only", "c. I and II only", "d. II, III, and IV only", "e. I, II, and IV only"], ans: "e", diff: "Medium" },
+        { id: 27, type: "PUT INTRINSIC VALUE", txt: "The intrinsic value of a put is equal to the:", opts: ["a. lesser of the strike price or the stock price.", "b. lesser of the stock price minus the exercise price or zero.", "c. lesser of the stock price or zero.", "d. greater of the strike price minus the stock price or zero.", "e. greater of the stock price minus the exercise price or zero."], ans: "d", diff: "Medium" },
+        { id: 28, type: "FACTORS AFFECTING OPTION VALUES", txt: "Which of the following statements are correct concerning option values?\nI. The value of a call increases as the price of the underlying stock increases.\nII. The value of a call decreases as the exercise price increases.\nIII. The value of a put increases as the price of the underlying stock increases.\nIV. The value of a put decreases as the exercise price increases.", opts: ["a. I and III only", "b. II and IV only", "c. I and II only", "d. II and III only", "e. I, II, and IV only"], ans: "c", diff: "Medium" },
+        { id: 29, type: "FACTORS AFFECTING OPTION VALUES", txt: "The value of a call increases when:\nI. the time to expiration increases.\nII. the stock price increases.\nIII. the risk-free rate of return increases.\nIV. the volatility of the price of the underlying stock increases.", opts: ["a. I and III only", "b. II, III, and IV only", "c. I, III, and IV only", "d. I, II, and III only", "e. I, II, III, and IV"], ans: "e", diff: "Medium" },
+        { id: 30, type: "FACTORS AFFECTING OPTION VALUES", txt: "Which one of the following will cause the value of a call to decrease?", opts: ["a. lowering the exercise price", "b. increasing the time to expiration", "c. increasing the risk-free rate", "d. lowering the risk level of the underlying security", "e. increasing the stock price"], ans: "d", diff: "Medium" },
+        { id: 31, type: "FACTORS AFFECTING OPTION VALUES", txt: "Assume that you own both a May 40 put and a May 40 call on ABC stock. Which one of the following statements is correct concerning your option positions? Ignore taxes and transaction costs.", opts: ["a. An increase in the stock price will increase the value of your put and decrease the value of your call.", "b. Both a May 45 put and a May 45 call will have higher values than your May 40 options.", "c. The time premiums on both your put and call are less than the time premiums on equivalent June options.", "d. A decrease in the stock price will decrease the value of both of your options.", "e. You cannot profit on your position as your profits on one option will be offset by losses on the other option."], ans: "c", diff: "Medium" },
+        { id: 32, type: "FACTORS AFFECTING OPTION VALUES", txt: "You own both a May 20 call and a May 20 put. If the call finishes in the money, then the put will:", opts: ["a. also finish in the money.", "b. finish at the money.", "c. finish out of the money.", "d. either finish at the money or in the money.", "e. either finish at the money or out of the money."], ans: "c", diff: "Medium" },
+        { id: 33, type: "EQUITY AS A CALL OPTION", txt: "You own stock in a firm that has a pure discount loan due in six months. The loan has a face value of $50,000. The assets of the firm are currently worth $62,000. The stockholders in this firm basically own a ________ option on the assets of the firm with a strike price of:", opts: ["a. put, $62,000.", "b. put, $50,000.", "c. warrant, $62,000.", "d. call, $62,000.", "e. call, $50,000."], ans: "e", diff: "Medium" },
+        { id: 34, type: "CALL OPTION", txt: "The buyer of a European call option has the:", opts: ["a. right but not the obligation to buy a stock at a specified price on a specified date.", "b. right but not the obligation to buy a stock at a specified price during a specified period of time.", "c. obligation to buy a stock on a specified date but only at the specified price.", "d. obligation to buy a stock sometime during a specified period of time at the specified price.", "e. obligation to buy a stock at the lower of the exercise price or the market price on the expiration date."], ans: "a", diff: "Medium" },
+        { id: 35, type: "CALL OPTION PRICING", txt: "In the Black-Scholes option pricing formula, N(d1) is the probability that a standardized, normally distributed random variable is:", opts: ["a. less than or equal to N(d2)", "b. less than one.", "c. equal to one.", "d. equal to d1", "e. less than or equal to d1."], ans: "e", diff: "Challenge" },
+        { id: 36, type: "PUT OPTION PRICING", txt: "To compute the value of a put using the Black-Scholes option pricing model, you:", opts: ["a. first have to apply the put-call parity relationship.", "b. first have to compute the value of the put as if it is a call.", "c. compute the value of an equivalent call and then subtract that value from one.", "d. compute the value of an equivalent call and then subtract that value from the market price of the stock.", "e. compute the value of an equivalent call and then multiply that value by e^(-RT)"], ans: "b", diff: "Medium" },
+        { id: 37, type: "EQUITY VALUE OF A FIRM", txt: "If you consider the equity of a firm to be an option on the firm's assets then the act of paying off debt is comparable to:", opts: ["a. purchasing a put option", "b. purchasing a call option", "c. exercising an in-the-money put option", "d. exercising an in-the-money call option on the assets of the firm.", "e. selling a call option"], ans: "d", diff: "Medium" },
+        { id: 38, type: "EQUITY VALUE OF A FIRM", txt: "For every positive net present value project that a firm undertakes, the equity in the firm will increase the most if the delta of the call option on the firm's assets is:", opts: ["a. equal to one.", "b. between zero and one.", "c. equal to zero.", "d. between zero and minus one.", "e. equal to minus one."], ans: "a", diff: "Medium" },
+        { id: 39, type: "OPTIONS AND CAPITAL BUDGETING", txt: "Shareholders in a leveraged firm might wish to accept a negative net present value project if:", opts: ["a. it increases the standard deviation of the returns on the firm's assets.", "b. it lowers the risk level of the firm.", "c. it diversifies the cash flows of the firm.", "d. it lowers the variance of the returns on the firm's assets.", "e. it decreases the risk that a firm will default on its debt."], ans: "a", diff: "Medium" },
+        { id: 40, type: "AMERICAN & EUROPEAN OPTIONS", txt: "Which of the following statements is true?", opts: ["a. American options are options on securities of U.S. corporations, and the options are traded on American exchanges.", "b. European options are options on securities of U.S. corporations, but the options are traded on European exchanges.", "c. American options are options on securities which are traded on American exchanges. European options, also traded on American exchanges, are options on European corporations.", "d. American options give the holder the right to the dividend payment. European options do not.", "e. American options may be exercised anytime up to expiration. European options may be exercised only at expiration."], ans: "e", diff: "Medium" },
+        { id: 41, type: "OUT OF THE MONEY CALL", txt: "An out-of-the-money call option is one that:", opts: ["a. has an exercise price below the current market price of the underlying security.", "b. should not be exercised.", "c. has an exercise price above the current market price of the underlying security.", "d. Both A and B.", "e. Both B and C."], ans: "e", diff: "Medium" },
+        { id: 42, type: "CALL OPTION WRITERS", txt: "Which of the following is not true concerning call option writers?", opts: ["a. Writers promise to deliver shares if exercised by the buyer.", "b. The writer has the option to sell shares but not an obligation.", "c. The writer's liability is zero if the option expires out-of-the-money.", "d. The writer receives a cash payment from the buyer at the time the option is purchased.", "e. The writer has a loss if the market price rises substantially above the exercise price."], ans: "b", diff: "Medium" },
+        { id: 43, type: "IN-THE MONEY PUT OPTION", txt: "An in-the-money put option is one that:", opts: ["a. has an exercise price greater than the underlying stock price.", "b. has an exercise price less than the underlying stock price.", "c. has an exercise price equal to the underlying stock price.", "d. should not be exercised at expiration.", "e. should not be exercised at any time."], ans: "a", diff: "Medium" },
+        { id: 44, type: "PRICING OPTIONS", txt: "Which of the following statements is true?", opts: ["a. At expiration the maximum price of a call is the greater of (Stock Price - Exercise) or 0.", "b. At expiration the maximum price of a call is the greater of (Exercise - Stock Price) or 0.", "c. At expiration the maximum price of a put is the greater of (Stock Price - Exercise) or 0.", "d. At expiration the maximum price of a put is the greater of (Exercise - Stock Price) or 0.", "e. Both A and D."], ans: "e", diff: "Medium" },
+        { id: 45, type: "PUT-CALL PARITY", txt: "Put-call parity can be used to show:", opts: ["a. how far in-the-money put options can get.", "b. how far in-the-money call options can get.", "c. the precise relationship between put and call prices given equal exercise prices and equal expiration dates.", "d. that the value of a call option is always twice that of a put given equal exercise prices and equal expiration dates.", "e. that the value of a call option is always half that of a put given equal exercise prices and equal expiration dates."], ans: "c", diff: "Medium" },
+        { id: 46, type: "CALL OPTIONS", txt: "Tele-Tech Com announces a major expansion into Internet services. This announcement causes the price of Tele-Tech Com stock to increase, but also causes an increase in price volatility of the stock.\n\nWhich of the following correctly identifies the impact of these changes on the call option of Tele-Tech Com?", opts: ["a. Both changes cause the price of the call option to decrease.", "b. Both changes cause the price of the call option to increase.", "c. The greater uncertainty will cause the price of the call option to decrease. The higher price of the stock will cause the price of the call option to increase.", "d. The greater uncertainty will cause the price of the call option to increase. The higher price of the stock will cause the price of the call option to decrease.", "e. The greater uncertainty has no direct effect on the price of the call option. The higher price of the stock will cause the price of the call option to decrease."], ans: "b", diff: "Medium" },
+        { id: 47, type: "PUT OPTIONS", txt: "Tele-Tech Com announces a major expansion into Internet services. This announcement causes the price of Tele-Tech Com stock to increase, but also causes an increase in price volatility of the stock.\n\nWhich of the following correctly identifies the impact of these changes on the put option of Tele-Tech Com?", opts: ["a. Both changes cause the price of the put option to decrease.", "b. Both changes cause the price of the put option to increase.", "c. The greater uncertainty will cause the price of the put option to decrease. The higher price of the stock will cause the price of the put option to increase.", "d. The greater uncertainty will cause the price of the put option to increase. The higher price of the stock will cause the price of the put option to decrease.", "e. The greater uncertainty has no direct effect on the price of the put option. The higher price of the stock will cause the price of the put option to decrease."], ans: "d", diff: "Medium" },
+        { id: 48, type: "DELTA", txt: "The delta of a call measures:", opts: ["a. the change in the ending stock value.", "b. the change in the ending option value.", "c. the swing in the price of the call relative to the swing in stock price.", "d. the ratio of the change in the exercise price to the change in the stock price.", "e. None of the above."], ans: "c", diff: "Medium" },
+        { id: 49, type: "BLACK-SCHOLES PARAMETERS", txt: "The Black-Scholes option pricing model is dependent on which five parameters?", opts: ["a. Stock price, exercise price, risk free rate, probability, and time to maturity", "b. Stock price, risk free rate, probability, time to maturity, and variance", "c. Stock price, risk free rate, probability, variance and exercise price", "d. Stock price, exercise price, risk free rate, variance and time to maturity", "e. Exercise price, probability, stock price, variance and time to maturity"], ans: "d", diff: "Medium" }
+    ];
+
+    let currentFilter = 'all';
+    // 從 localStorage 讀取已標記的題號清單
+    let flaggedQuestions = JSON.parse(localStorage.getItem('flaggedOptionsQuestions')) || [];
+
+    // 初始化與渲染
+    function init() {
+        renderQuestions();
+        updateStats();
+    }
+
+    // 渲染題目清單
+    function renderQuestions() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = '';
+
+        rawData.forEach(q => {
+            const isFlagged = flaggedQuestions.includes(q.id);
+
+            // 若在「已標記」篩選模式下且該題未被標記，則跳過不顯示
+            if (currentFilter === 'flagged' && !isFlagged) return;
+
+            const card = document.createElement('div');
+            card.className = `q-card ${isFlagged ? 'flagged' : ''}`;
+            card.id = `q-card-${q.id}`;
+
+            // 生成選項 HTML (2欄架構)
+            let optionsHTML = '';
+            q.opts.forEach(opt => {
+                optionsHTML += `<div class="option-item">${opt}</div>`;
+            });
+
+            card.innerHTML = `
+                <div class="q-left">
+                    <button class="flag-btn" onclick="toggleFlag(${q.id})" title="標記為容易出錯">
+                        🏳️ 標記
+                    </button>
+                    <div class="q-num">第 ${q.id} 題</div>
+                </div>
+                <div class="q-main">
+                    <div style="margin-bottom: 5px;">
+                        <span class="badge" style="background-color: #e2e3e5; color: #383d41; margin-right: 5px;">${q.type}</span>
+                        <span class="badge">難易度: ${q.diff}</span>
+                    </div>
+                    <div class="q-text">${q.txt}</div>
+                    <div class="options-grid">
+                        ${optionsHTML}
+                    </div>
+                    <div class="error-tag">⚠️ 此題已被納入「容易出錯」核心複習清單</div>
+                </div>
+                <div class="q-right">
+                    <div class="answer-container" title="將滑鼠移至本題或反白此格子即可顯示答案">
+                        答案: ${q.ans.toUpperCase()}
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        if (container.innerHTML === '' && currentFilter === 'flagged') {
+            container.innerHTML = `<div style="text-align: center; padding: 4px; color: #6c757d; font-size: 16px;">目前沒有被標記的題目。點擊題目左側的「🏳️ 標記」按鈕可加入清單。</div>`;
+        }
+    }
+
+    // 切換標記狀態
+    function toggleFlag(id) {
+        const index = flaggedQuestions.indexOf(id);
+        if (index === -1) {
+            flaggedQuestions.push(id);
+        } else {
+            flaggedQuestions.splice(index, 1);
+        }
+        
+        // 儲存至 localStorage
+        localStorage.setItem('flaggedOptionsQuestions', JSON.stringify(flaggedQuestions));
+        
+        // 更新 UI 狀態
+        updateStats();
+        
+        if (currentFilter === 'flagged') {
+            // 如果在篩選模式下，重新完整重繪
+            renderQuestions();
+        } else {
+            // 如果在全部顯示模式，僅動態轉換該卡片 class
+            const card = document.getElementById(`q-card-${id}`);
+            if (card) {
+                card.classList.toggle('flagged');
+            }
+        }
+    }
+
+    // 更新計數狀態
+    function updateStats() {
+        const display = document.getElementById('flag-count-display');
+        display.innerText = `已標記題數：${flaggedQuestions.length} 題`;
+    }
+
+    // 分類篩選切換
+    function filterQuestions(filterType) {
+        currentFilter = filterType;
+        document.getElementById('btn-all').classList.remove('active');
+        document.getElementById('btn-flagged').classList.remove('active');
+
+        if (filterType === 'all') {
+            document.getElementById('btn-all').classList.add('active');
+        } else {
+            document.getElementById('btn-flagged').classList.add('active');
+        }
+
+        renderQuestions();
+    }
+
+    // 啟動系統
+    window.onload = init;
+</script>
+
+</body>
+</html>

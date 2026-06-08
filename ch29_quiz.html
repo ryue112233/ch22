@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Finance, 12e (Ross) - Chapter 29 Mergers, Acquisitions, and Divestitures</title>
+    <style>
+        :root {
+            --primary-color: #2b579a;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --flagged-border: #ff9800;
+            --flagged-bg: #fff9e6;
+            --border-color: #dddddd;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 試卷基本資訊 */
+        header {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #e0e0e0;
+            border: none;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .counter {
+            font-size: 14px;
+            font-weight: bold;
+            background: #e8f0fe;
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        /* 題目清單區塊 */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: grid;
+            /* 橫向並排排列：題號、旗標、答案、內容 */
+            grid-template-columns: 40px 40px 50px 1fr;
+            gap: 15px;
+            align-items: start;
+            transition: all 0.2s;
+        }
+
+        .q-num {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary-color);
+            padding-top: 2px;
+        }
+
+        /* 旗標按鈕 */
+        .flag-btn {
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            width: 34px;
+            height: 34px;
+        }
+
+        .flag-btn:hover {
+            background: #f0f0f0;
+        }
+
+        /* 容易出錯的視覺提示（明亮色系防疲勞） */
+        .question-card.flagged {
+            border: 2px solid var(--flagged-border);
+            background-color: var(--flagged-bg);
+        }
+
+        .question-card.flagged .flag-btn {
+            background-color: var(--flagged-border);
+            border-color: var(--flagged-border);
+        }
+
+        /* 答案隱藏機制 (預設白底白字) */
+        .answer-box {
+            background-color: #ffffff;
+            color: #ffffff;
+            border: 1px solid #cccccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            user-select: text; /* 允許反白選取 */
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            width: 35px;
+            height: 24px;
+            line-height: 24px;
+        }
+
+        /* 滑鼠移至題目區塊或答案區塊時自動顯示答案 */
+        .question-card:hover .answer-box, .answer-box:hover {
+            background-color: #e2f0d9;
+            color: #385723;
+            border-color: #385723;
+        }
+
+        /* 滑鼠選取反白時的顏色 */
+        .answer-box::selection {
+            background: #2b579a;
+            color: white;
+        }
+
+        .q-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .q-text {
+            font-weight: 500;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+
+        /* 選項採兩欄格式呈現 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #eaedf1;
+            font-size: 15px;
+        }
+
+        /* 響應式微調：手機模式下自動轉換為單欄選項與緊湊排版 */
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .question-card {
+                grid-template-columns: auto auto auto 1fr;
+                gap: 10px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Corporate Finance, 12e (Ross)</h1>
+        <h3>Chapter 29 Mergers, Acquisitions, and Divestitures</h3>
+        <div class="meta-info">
+            <span>科目：公司理財 (Corporate Finance)</span>
+            <span>範圍：第 29 章 併購與資產剝離 (1~61題)</span>
+            <span>日期：115年6月8日</span>
+        </div>
+    </header>
+
+    <div class="control-panel">
+        <div class="filter-buttons">
+            <button class="btn active" id="btn-all" onclick="filterQuestions('all')">全部題目</button>
+            <button class="btn" id="btn-flagged" onclick="filterQuestions('flagged')">已標記 (容易出錯)</button>
+        </div>
+        <div class="counter" id="flag-counter">已標記題數：0 / 61</div>
+    </div>
+
+    <div class="question-list" id="q-list">
+        </div>
+</div>
+
+<script>
+    // 1-61 題完整題庫數據
+    const questionsData = [
+        { id: 1, ans: "B", q: "One company wishes to acquire another. Which one of the following does not require a formal vote by the shareholders of the acquired firm?", opts: ["A) A merger", "B) An acquisition of stock", "C) A horizontal acquisition of assets", "D) A consolidation", "E) A vertical acquisition of assets"] },
+        { id: 2, ans: "D", q: "Firm A and Firm B join to create Firm AB. This is an example of:", opts: ["A) a tender offer.", "B) an acquisition of assets.", "C) an acquisition of stock.", "D) a consolidation.", "E) a merger."] },
+        { id: 3, ans: "A", q: "Suppose that Ford and General Motors were to merge. Ignoring potential antitrust problems, this merger would be classified as a(n):", opts: ["A) horizontal merger.", "B) vertical merger.", "C) conglomerate merger.", "D) tax inversion merger.", "E) equity carve-out merger."] },
+        { id: 4, ans: "D", q: "Suppose that General Motors makes an offer to acquire General Mills. Ignoring potential antitrust problems, this merger would be classified as a:", opts: ["A) monopolistic merger.", "B) horizontal merger.", "C) vertical merger.", "D) conglomerate merger.", "E) equity carve-out merger."] },
+        { id: 5, ans: "B", q: "Suppose that Arby's acquired a meat packing house. This merger would be classified as a:", opts: ["A) monopolistic merger.", "B) vertical merger.", "C) conglomerate merger.", "D) horizontal merger.", "E) spin off."] },
+        { id: 6, ans: "C", q: "A dissident group solicits votes in an attempt to replace existing management. This is called a:", opts: ["A) tender offer.", "B) shareholder derivative action.", "C) proxy contest.", "D) management freeze-out.", "E) shareholder's revenge."] },
+        { id: 7, ans: "C", q: "If the All-Star Fuel Filling Company, a chain of gasoline stations, acquires the Mid-States Refining Company, a refiner of oil products, this would be an example of a:", opts: ["A) conglomerate acquisition.", "B) white knight.", "C) vertical acquisition.", "D) going-private transaction.", "E) horizontal acquisition."] },
+        { id: 8, ans: "D", q: "When the officers of a firm purchase all the equity shares and the shares of the firm are delisted and no longer publicly available, this action is known as a(n):", opts: ["A) consolidation.", "B) vertical acquisition.", "C) proxy contest.", "D) going-private transaction.", "E) equity carve-out."] },
+        { id: 9, ans: "C", q: "A business deal in which all publicly owned stock in a firm is replaced with complete equity ownership by a private group is called a:", opts: ["A) tender offer.", "B) proxy contest.", "C) going-private transaction.", "D) acquisition.", "E) consolidation."] },
+        { id: 10, ans: "A", q: "The complete absorption of one company by another, wherein the acquiring firm retains its identity and the acquired firm ceases to exist as a separate entity, is called a:", opts: ["A) merger.", "B) consolidation.", "C) tender offer.", "D) spinoff.", "E) divestiture."] },
+        { id: 11, ans: "B", q: "A merger in which an entirely new firm is created and both the acquired and acquiring firms cease to exist is called a:", opts: ["A) divestiture.", "B) consolidation.", "C) tender offer.", "D) spinoff.", "E) conglomeration."] },
+        { id: 12, ans: "C", q: "A public offer by one firm to directly buy the shares of another firm is called a:", opts: ["A) merger.", "B) consolidation.", "C) tender offer.", "D) spinoff.", "E) divestiture."] },
+        { id: 13, ans: "D", q: "The acquisition of a firm in the same industry as the bidder is called a __________ acquisition.", opts: ["A) conglomerate", "B) forward", "C) backward", "D) horizontal", "E) vertical"] },
+        { id: 14, ans: "E", q: "The acquisition of a firm involved with a different production process stage than the bidder is called a __________ acquisition.", opts: ["A) conglomerate", "B) forward", "C) backward", "D) horizontal", "E) vertical"] },
+        { id: 15, ans: "A", q: "The acquisition of a firm whose business is not related to that of the bidder is called a __________ acquisition.", opts: ["A) conglomerate", "B) forward", "C) backward", "D) horizontal", "E) vertical"] },
+        { id: 16, ans: "B", q: "An attempt to gain control of a firm by soliciting a sufficient number of stockholder votes to replace the current board of directors is called a:", opts: ["A) tender offer.", "B) proxy contest.", "C) going-private transaction.", "D) leveraged buyout.", "E) consolidation."] },
+        { id: 17, ans: "A", q: "Which one of the following statements concerning mergers and acquisitions is correct?", opts: ["A) Generally, two-thirds of the shareholders in each firm must approve a merger.", "B) Acquisitions always result in at least one firm being dissolved.", "C) The net present value of an acquisition should have no bearing on whether or not the acquisition occurs.", "D) Acquisitions of assets are generally quite simple and inexpensive from a legal and accounting perspective.", "E) At least one-half of the shareholders must vote to approve an acquisition of stock."] },
+        { id: 18, ans: "B", q: "In a merger the:", opts: ["A) legal status of both the acquiring firm and the target firm is terminated.", "B) acquiring firm retains its name and legal status.", "C) acquiring firm acquires the assets but not the liabilities of the target firm.", "D) stockholders of the target firm have little, if any, say as to whether or not the merger occurs.", "E) target firm always continues to exist as a subsidiary of the acquiring firm."] },
+        { id: 19, ans: "D", q: "When a building supply store acquires a lumber mill it is making a __________ acquisition.", opts: ["A) horizontal", "B) longitudinal", "C) conglomerate", "D) vertical", "E) complementary resources"] },
+        { id: 20, ans: "C", q: "If Microsoft were to acquire an airline, the acquisition would be classified as a __________ acquisition.", opts: ["A) horizontal", "B) longitudinal", "C) conglomerate", "D) vertical", "E) complementary resources"] },
+        { id: 21, ans: "B", q: "Which one of the following combinations of firms would benefit the most through the use of complementary resources?", opts: ["A) A ski resort and a travel trailer sales outlet", "B) A golf resort and a ski resort", "C) A hotel and a home improvement center", "D) A swimming pool distributor and a kitchen designer", "E) A fast food restaurant and a dry cleaner"] },
+        { id: 22, ans: "A", q: "Which one of the following is most likely a good candidate for an acquisition that could benefit from the use of complementary resources?", opts: ["A) A sports arena that is home only to an indoor hockey team", "B) A hotel in a busy downtown business district of a major city", "C) A day care center located near a major route into the main business district of a large city", "D) An amusement park located in a centralized Florida location", "E) A fast food restaurant located near a major transportation hub"] },
+        { id: 23, ans: "A", q: "The value of a target firm to the acquiring firm is equal to the:", opts: ["A) value of the target firm as a separate entity plus the synergy derived from the acquisition.", "B) purchase cost of the target firm.", "C) value of the merged firm minus the value of the target firm as a separate entity.", "D) purchase cost plus the incremental value derived from the acquisition.", "E) incremental value derived from the acquisition."] },
+        { id: 24, ans: "E", q: "The positive incremental net gain associated with the combination of two firms through a merger or acquisition is called:", opts: ["A) the agency conflict.", "B) goodwill.", "C) the merger cost.", "D) the consolidation effect.", "E) synergy."] },
+        { id: 25, ans: "C", q: "All the following represent potential gains from an acquisition except:", opts: ["A) the replacement of ineffective managers.", "B) lower costs per unit produced.", "C) an increase in production size such that diseconomies of scale are realized.", "D) increased asset utilization.", "E) spreading of overhead costs."] },
+        { id: 26, ans: "A", q: "The shareholders of a target firm benefit the most when:", opts: ["A) an acquiring firm has the better management team and replaces the target firm's managers.", "B) the management of the target firm is more efficient than the management of the acquiring firm which replaces them.", "C) the management of both the acquiring firm and the target firm are as equivalent as possible.", "D) their current management team is kept in place even though the managers of the acquiring firm are more suited to manage the target firm's situation.", "E) their management team is technologically knowledgeable yet ineffective."] },
+        { id: 27, ans: "D", q: "A proposed acquisition may create synergy by doing all the following except:", opts: ["A) increasing the market power of the combined firm.", "B) improving the distribution network of the acquiring firm.", "C) reducing the acquiring firm's distribution costs.", "D) reducing the utilization of the acquiring firm's assets.", "E) providing the combined firm with a strategic advantage."] },
+        { id: 28, ans: "C", q: "__________ can provide a potential tax gain from an acquisition.", opts: ["A) A reduction in the level of debt", "B) An increase in surplus funds", "C) The combining of multi-state operations", "D) A decreased use of leverage", "E) Increased diseconomies of scale"] },
+        { id: 29, ans: "D", q: "A key reason for acquisitions is synergy. Synergy includes all the following except:", opts: ["A) revenue enhancements.", "B) cost reductions.", "C) increased debt capacity.", "D) decreased cash flows.", "E) increased efficiency."] },
+        { id: 30, ans: "B", q: "Assume two firms are at their maximum level of debt. How can a merger between these firms create synergy based on debt capacity?", opts: ["A) By increasing firm size", "B) By lowering risk", "C) By lowering taxes", "D) By lowering the tax shield", "E) They can't."] },
+        { id: 31, ans: "C", q: "Assume a well-established firm is operating at high levels of efficiency and profitability. A group of recent college grads recently opened a new firm in the same industry. The well-established firm might be interested in acquiring the new firm primarily to:", opts: ["A) reduce economies of scale.", "B) use the established firm's tax losses.", "C) transfer technology knowledge.", "D) obtain the new firm's surplus funds.", "E) control the production of purchased component parts."] },
+        { id: 32, ans: "C", q: "The IRS is most apt to disallow an acquisition if it:", opts: ["A) moves the foreign operations of the acquired firm to the U.S.", "B) is totally financed with debt.", "C) is designed primarily to reduce federal taxes.", "D) is designed to transfer technology in a tax-free transfer.", "E) allows shareholders to avoid currently realizing their gains from a stock acquisition."] },
+        { id: 33, ans: "B", q: "If an acquisition does not create value, then the:", opts: ["A) earnings per share of the acquiring firm must be the same both before and after the acquisition.", "B) earnings per share can change but the stock price of the acquiring company should remain constant.", "C) price per share of the acquiring company should increase because of the growth of the firm.", "D) earnings per share will most likely increase while the price-earnings ratio remains constant.", "E) price-earnings ratio should remain constant regardless of any changes in the earnings per share."] },
+        { id: 34, ans: "C", q: "For the acquiring firm, diversification:", opts: ["A) will automatically produce gains.", "B) will reduce both risk and debt capacity.", "C) may or may not provide financial benefits.", "D) will provide risk reduction for all shareholders' portfolios.", "E) may result in a risk-free firm."] },
+        { id: 35, ans: "B", q: "Assume a merger of two levered firms produced no synergy. In this case, the:", opts: ["A) acquiring firm's shareholders would neither gain nor lose any value.", "B) bondholders would probably benefit at shareholders' expense.", "C) diversification effect would only benefit the acquired firm's shareholders.", "D) combined shareholders would benefit at the expense of all debt holders.", "E) shareholders and bondholders would fail to realize any benefits or losses."] },
+        { id: 36, ans: "E", q: "Assume a merger of two unlevered firms produced no synergy. In this case:", opts: ["A) the acquiring firm's shareholders would gain while the acquired firm's shareholders would lose.", "B) the shareholders of both firms would realize equal gains.", "C) the diversification effect would only benefit the acquired firm's shareholders.", "D) the acquired firm's shareholders would gain at the expense of the acquiring firm's shareholders.", "E) all shareholders would fail to realize any benefits."] },
+        { id: 37, ans: "A", q: "In a merger or acquisition, a firm should be acquired if it:", opts: ["A) generates a positive net present value to the shareholders of the acquiring firm.", "B) is a firm in the same line of business in which the acquirer has expertise.", "C) is a firm in a totally different line of business which will diversify the firm.", "D) pays a large dividend which will provide a cash pass through to the acquirer.", "E) increases the firm's market share."] },
+        { id: 38, ans: "C", q: "When evaluating an acquisition, you should:", opts: ["A) concentrate on book values and ignore market values.", "B) focus on the total cash flows of the merged firm.", "C) include synergies.", "D) ignore any one-time acquisition fees or transaction costs.", "E) ignore any potential changes in management."] },
+        { id: 39, ans: "B", q: "The Williams Act requires Schedule 13D be filed with the SEC within _____ days of obtaining a _____ percent holding in a target firm's stock.", opts: ["A) 5; 10", "B) 10; 5", "C) 15; 5", "D) 5; 15", "E) 15; 10"] },
+        { id: 40, ans: "C", q: "A tender offer generally offers a price that is _____ the current market price for a _____ number of shares.", opts: ["A) equal to; minimum", "B) above; minimum", "C) above; maximum", "D) below; maximum", "E) equal to; maximum"] },
+        { id: 41, ans: "E", q: "Assume an acquiring firm obtained control of a target firm through a tender offer. This group is now proposing a merger that is generally referred to as a:", opts: ["A) proxy fight.", "B) street sweep.", "C) waning motion.", "D) toehold.", "E) cleanup merger."] },
+        { id: 42, ans: "A", q: "A change in the corporate charter making it more difficult for the firm to be acquired by increasing the percentage of shareholders that must approve a merger offer is called a:", opts: ["A) supermajority amendment.", "B) standstill agreement.", "C) greenmail provision.", "D) poison pill amendment.", "E) white knight provision."] },
+        { id: 43, ans: "C", q: "Assume Uptown Markets just made a tender offer to purchase shares of its own stock. This offer was made to all its shareholders except for the largest outside shareholder. This offer is referred to as a(n):", opts: ["A) limited recapitalization.", "B) white knight offer.", "C) exclusionary self-tender.", "D) asset restructuring.", "E) greenmail offer."] },
+        { id: 44, ans: "B", q: "A contract wherein the bidding firm agrees to limit its holdings in the target firm is called a:", opts: ["A) supermajority amendment.", "B) standstill agreement.", "C) greenmail provision.", "D) poison pill amendment.", "E) white knight provision."] },
+        { id: 45, ans: "C", q: "The payments made by a firm to repurchase shares of its outstanding stock from an individual investor in an attempt to eliminate a potentially unfriendly takeover attempt are referred to as:", opts: ["A) a golden parachute.", "B) standstill payments.", "C) greenmail.", "D) a poison pill.", "E) a white knight."] },
+        { id: 46, ans: "D", q: "A tactic designed to make unfriendly takeover attempts financially unappealing, if not impossible, is called:", opts: ["A) a golden parachute.", "B) a standstill agreement.", "C) greenmail.", "D) a poison pill.", "E) a white knight."] },
+        { id: 47, ans: "A", q: "Generous compensation packages paid to a firm's top managers in the event of a takeover are referred to as:", opts: ["A) golden parachutes.", "B) poison puts.", "C) white knights.", "D) shark repellents.", "E) bear hugs."] },
+        { id: 48, ans: "C", q: "A friendly suitor that a target firm turns to as an alternative to a hostile bidder is called a:", opts: ["A) golden suitor.", "B) poison put.", "C) white knight.", "D) shark repellent.", "E) crown jewel."] },
+        { id: 49, ans: "C", q: "A classified board is:", opts: ["A) a communication network that identifies firms that are willing to be acquired.", "B) the inclusion of a super majority provision to prevent a small number of directors from exerting total control over the board's decisions.", "C) a board where only a portion of the directors are elected in any one year.", "D) a communication network that distributes resumes for potential board candidates.", "E) a listing of criteria that a firm is seeking for a targeted purchase."] },
+        { id: 50, ans: "B", q: "All the following will tend to discourage a takeover except:", opts: ["A) a supermajority provision.", "B) the hoarding of cash.", "C) an exclusionary self-tender offer.", "D) a leveraged recapitalization.", "E) the divestiture of key assets."] },
+        { id: 51, ans: "C", q: "In a tax-free acquisition, the shareholders of the target firm:", opts: ["A) receive income that is considered to be tax-exempt.", "B) gift their shares to a tax-exempt organization and therefore have no taxable gain.", "C) are viewed as having exchanged their shares.", "D) sell their shares to a qualifying entity thereby avoiding both income and capital gains taxes.", "E) sell their shares at cost thereby avoiding the capital gains tax."] },
+        { id: 52, ans: "C", q: "Which one of the following statements is correct?", opts: ["A) If an acquisition is made with cash, then the cost of that acquisition is dependent upon the acquisition gains.", "B) Acquisitions made by exchanging shares of stock are normally taxable transactions.", "C) Shareholders of the acquired firm must immediately realize capital gains/losses in a cash acquisition.", "D) Shareholders of the acquired firm are generally indifferent between a cash or a stock transaction.", "E) Acquisitions based on legitimate business purposes are not taxable transactions regardless of the means of financing used."] },
+        { id: 53, ans: "C", q: "In a taxable transaction:", opts: ["A) the acquiring firm has no immediate tax effects but gains valuable future depreciation tax benefits on the marked up assets.", "B) the shareholders of both firms realize immediate capital gains.", "C) acquiring firms generally do not write up the assets of the acquired firm.", "D) the assets of both the acquiring and acquired firms are written up to their current market values.", "E) shares of the acquiring firm are exchanged for the target firm's shares."] },
+        { id: 54, ans: "D", q: "The purchase accounting method for mergers requires that:", opts: ["A) the excess of the purchase price over the fair market value of the target firm be recorded as a one-time expense on the income statement of the acquiring firm.", "B) goodwill be amortized on a yearly basis.", "C) the equity of the acquiring firm be reduced by the excess of the purchase price over the fair market value of the target firm.", "D) the assets of the acquired firm be recorded at their fair market value on the balance sheet of the acquiring firm.", "E) the excess amount paid for the target firm be recorded as a tangible asset on the books of the acquiring firm."] },
+        { id: 55, ans: "D", q: "A going-private transaction in which a large percentage of the money used to buy the outstanding stock is borrowed is called a:", opts: ["A) tender offer.", "B) proxy contest.", "C) merger.", "D) leveraged buyout.", "E) consolidation."] },
+        { id: 56, ans: "D", q: "The two sources of value created by an LBO are:", opts: ["A) the tax benefit of debt and increased sales.", "B) lower tax and interest payments.", "C) lower interest expenses and increased efficiency.", "D) increased efficiency and the interest tax shield.", "E) lower taxes and lower dividends."] },
+        { id: 57, ans: "B", q: "The sale of stock in a wholly owned subsidiary via an initial public offering is referred to as a(n):", opts: ["A) split-up.", "B) carve-out.", "C) counter-tender offer.", "D) white knight gift.", "E) spin-off."] },
+        { id: 58, ans: "E", q: "Which one of these is least associated with takeovers?", opts: ["A) Leveraged buyouts", "B) Management buyouts", "C) Proxy contests", "D) Acquisition of assets", "E) Spin-offs"] },
+        { id: 59, ans: "E", q: "A firm may want to divest itself of some of its assets for all the following reasons except to:", opts: ["A) raise cash.", "B) eliminate unprofitable operations.", "C) eliminate some recently acquired assets.", "D) cash in on profitable operations.", "E) eliminate some synergy."] },
+        { id: 60, ans: "A", q: "Which one of the following statements is correct?", opts: ["A) A carve-out generates cash for the parent firm.", "B) A split-up frequently follows a spin-off.", "C) A carve-out is a specific type of acquisition.", "D) A spin-off involves an initial public offering.", "E) A divestiture means that the original firm ceases to exist."] },
+        { id: 61, ans: "D", q: "The distribution of shares in a subsidiary to existing parent company stockholders is called a(n):", opts: ["A) lockup transaction.", "B) bear hug.", "C) equity carve-out.", "D) spin-off.", "E) split-up."] }
+    ];
+
+    let flaggedQuestions = JSON.parse(localStorage.getItem('flagged_chapter29') || '[]');
+    let currentFilter = 'all';
+
+    // 渲染題目清單
+    function renderQuestions() {
+        const listContainer = document.getElementById('q-list');
+        listContainer.innerHTML = '';
+
+        questionsData.forEach(item => {
+            const isFlagged = flaggedQuestions.includes(item.id);
+            
+            // 上方切換篩選邏輯
+            if (currentFilter === 'flagged' && !isFlagged) return;
+
+            const card = document.createElement('div');
+            card.className = `question-card ${isFlagged ? 'flagged' : ''}`;
+            card.id = `card-${item.id}`;
+
+            // 題號
+            const numDiv = document.createElement('div');
+            numDiv.className = 'q-num';
+            numDiv.innerText = `${item.id}.`;
+
+            // 旗標按鈕
+            const flagBtn = document.createElement('button');
+            flagBtn.className = 'flag-btn';
+            flagBtn.innerHTML = isFlagged ? '🚩' : '🏳️';
+            flagBtn.title = isFlagged ? "取消標記" : "標記為容易出錯";
+            flagBtn.onclick = () => toggleFlag(item.id);
+
+            // 答案隱藏區塊
+            const ansDiv = document.createElement('div');
+            ansDiv.className = 'answer-box';
+            ansDiv.innerText = item.ans;
+
+            // 題目與選項容器
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'q-body';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'q-text';
+            textDiv.innerText = item.q;
+
+            const optsGrid = document.createElement('div');
+            optsGrid.className = 'options-grid';
+            item.opts.forEach(opt => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                optDiv.innerText = opt;
+                optsGrid.appendChild(optDiv);
+            });
+
+            bodyDiv.appendChild(textDiv);
+            bodyDiv.appendChild(optsGrid);
+
+            // 橫向並排載入卡片
+            card.appendChild(numDiv);
+            card.appendChild(flagBtn);
+            card.appendChild(ansDiv);
+            card.appendChild(bodyDiv);
+
+            listContainer.appendChild(card);
+        });
+
+        updateCounter();
+    }
+
+    // 切換旗標儲存狀態
+    function toggleFlag(id) {
+        const index = flaggedQuestions.indexOf(id);
+        if (index > -1) {
+            flaggedQuestions.splice(index, 1);
+        } else {
+            flaggedQuestions.push(id);
+        }
+        localStorage.setItem('flagged_chapter29', JSON.stringify(flaggedQuestions));
+        renderQuestions();
+    }
+
+    // 更新即時標記題數
+    function updateCounter() {
+        document.getElementById('flag-counter').innerText = `已標記題數：${flaggedQuestions.length} / ${questionsData.length}`;
+    }
+
+    // 切換全部與弱點篩選
+    function filterQuestions(filterType) {
+        currentFilter = filterType;
+        document.getElementById('btn-all').classList.toggle('active', filterType === 'all');
+        document.getElementById('btn-flagged').classList.toggle('active', filterType === 'flagged');
+        renderQuestions();
+    }
+
+    window.onload = renderQuestions;
+</script>
+
+</body>
+</html>

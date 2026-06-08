@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamentals of Corporate Finance (Ross 12e) - Chapter 18 考古題複習</title>
+    <style>
+        :root {
+            --primary-color: #2b579a;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --flag-color: #999999;
+            --flag-active-color: #e0a800;
+            --flag-active-bg: #fffbf0;
+            --flag-active-border: #ffe8a1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* 篩選控制列 */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .btn-filter {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-filter.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .counter {
+            font-size: 14px;
+            color: #555;
+            margin-left: auto;
+        }
+
+        /* 題目區塊 */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            display: grid;
+            grid-template-columns: auto 50px 1fr;
+            gap: 15px;
+            align-items: start;
+            transition: all 0.2s;
+        }
+
+        /* 容易出錯標記樣式 */
+        .question-card.flagged {
+            background-color: var(--flag-active-bg);
+            border-color: var(--flag-active-border);
+            box-shadow: 0 2px 8px rgba(224, 168, 0, 0.1);
+        }
+
+        .question-num {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 16px;
+            min-width: 30px;
+            padding-top: 2px;
+        }
+
+        /* 旗標按鈕 */
+        .flag-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--flag-color);
+            padding: 0;
+            transition: transform 0.1s;
+            text-align: center;
+        }
+
+        .flag-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .question-card.flagged .flag-btn {
+            color: var(--flag-active-color);
+        }
+
+        .question-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .question-text {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        /* 選項雙欄排版 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .question-card {
+                grid-template-columns: auto 1fr;
+            }
+            .flag-btn {
+                grid-column: 1;
+                grid-row: 2;
+                text-align: left;
+            }
+        }
+
+        .option-item {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        /* 答案隱藏與顯示機制 */
+        .answer-box {
+            margin-top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #fff; /* 完全視覺隱藏 */
+            border: 1px dashed #ccc;
+            display: inline-block;
+            user-select: text;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        /* 滑鼠反白時可見 */
+        .answer-box::selection {
+            background-color: #2b579a;
+            color: white;
+        }
+
+        /* 滑鼠移至整張題卡時自動顯現答案 */
+        .question-card:hover .answer-box {
+            background-color: #e2f0d9;
+            color: #385723;
+            border-color: #c5e1a5;
+        }
+
+        .flag-badge {
+            display: none;
+            font-size: 11px;
+            background-color: var(--flag-active-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            width: fit-content;
+            margin-bottom: 5px;
+        }
+
+        .question-card.flagged .flag-badge {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Fundamentals of Corporate Finance, 12e (Ross)</h1>
+        <div class="meta-info">
+            <strong>複習範圍：</strong> Chapter 18 Short-Term Finance and Planning (第 1 至 61 題)<br>
+            <strong>測驗日期：</strong> 2026/05/13
+        </div>
+        <div class="controls">
+            <button class="btn-filter active" onclick="filterQuestions('all')">全部題目</button>
+            <button class="btn-filter" onclick="filterQuestions('flagged')">已標記 (容易出錯)</button>
+            <div class="counter">已標記弱點題數：<span id="flagged-count">0</span> / 61</div>
+        </div>
+    </header>
+
+    <div id="quiz-container">
+        </div>
+</div>
+
+<script>
+    // 完整的 1-61 題數據庫
+    const questionsData = [
+        { id: 1, q: "Which one of the following actions represents a source of cash?", options: ["A) Granting credit to a customer", "B) Purchasing new machinery", "C) Making a payment on a bank loan", "D) Purchasing inventory", "E) Accepting credit from a supplier"], ans: "E" },
+        { id: 2, q: "Which one of these actions represents a use of cash?", options: ["A) Collecting a receivable", "B) Paying employee wages", "C) Selling inventory for cash", "D) Obtaining a bank loan", "E) Purchasing inventory on credit"], ans: "B" },
+        { id: 3, q: "Which one of these activities represents a source of cash?", options: ["A) Increasing accounts receivable", "B) Decreasing inventory", "C) Increasing fixed assets", "D) Decreasing accounts payable", "E) Decreasing common stock"], ans: "B" },
+        { id: 4, q: "Which one of the following actions will increase net working capital? Assume the current ratio is greater than 1.0.", options: ["A) Paying a supplier for a previous purchase", "B) Paying off a long-term debt", "C) Selling inventory at cost for cash", "D) Purchasing inventory on credit", "E) Selling inventory at a profit on credit"], ans: "E" },
+        { id: 5, q: "Which one of the following will decrease net working capital? Assume the current ratio is greater than 1.0.", options: ["A) Selling inventory at cost", "B) Collecting payment from a customer", "C) Paying a dividend to shareholders", "D) Selling a fixed asset for less than book value", "E) Paying a supplier for prior purchases"], ans: "C" },
+        { id: 6, q: "Which one of these actions will increase the operating cycle? Assume all else held constant.", options: ["A) Decreasing the payables period", "B) Decreasing the receivables turnover rate", "C) Increasing the payables period", "D) Decreasing the average inventory level", "E) Increasing the inventory turnover rate"], ans: "B" },
+        { id: 7, q: "The operating cycle is equal to the:", options: ["A) cash cycle plus the accounts receivable period.", "B) inventory period plus the accounts receivable period.", "C) inventory period plus the accounts payable period.", "D) accounts payable period minus the cash cycle.", "E) accounts payable period plus the accounts receivable period."], ans: "B" },
+        { id: 8, q: "Which one of the following will decrease the operating cycle?", options: ["A) Decreasing the inventory turnover rate", "B) Decreasing the accounts payable period", "C) Increasing the accounts receivable turnover rate", "D) Increasing the accounts payable period", "E) Increasing the accounts receivable period"], ans: "C" },
+        { id: 9, q: "The operating cycle describes how a product:", options: ["A) is priced.", "B) is sold.", "C) moves through the current asset accounts.", "D) moves through the production process.", "E) generates a profit."], ans: "C" },
+        { id: 10, q: "Which one of these affects the length of the cash cycle but not the operating cycle?", options: ["A) Inventory period", "B) Accounts payable period", "C) Both the accounts receivable and inventory periods", "D) Accounts receivable period", "E) Both the accounts receivable and the accounts payable periods"], ans: "B" },
+        { id: 11, q: "Which one of these will decrease the cash cycle, all else held constant?", options: ["A) Increasing the accounts receivable turnover rate", "B) Decreasing the accounts payable period", "C) Increasing the inventory period", "D) Decreasing the inventory turnover rate", "E) Increasing the accounts receivable period"], ans: "A" },
+        { id: 12, q: "A decrease in which one of the following will increase the cash cycle, all else held constant?", options: ["A) Payables turnover", "B) Days sales in inventory", "C) Operating cycle", "D) Inventory turnover rate", "E) Accounts receivable period"], ans: "D" },
+        { id: 13, q: "Metal Designs historically produced products for inventory. Now, they only produce a product when an actual order is received from a customer. All else equal, this change will:", options: ["A) increase the operating cycle.", "B) lengthen the accounts receivable period.", "C) shorten the accounts payable period.", "D) decrease the cash cycle.", "E) decrease the inventory turnover rate."], ans: "D" },
+        { id: 14, q: "Which one of these statements is correct? Assume all else held constant.", options: ["A) A decrease in the accounts receivable turnover rate decreases the cash cycle.", "B) The cash cycle is equal to the operating cycle minus the inventory period.", "C) A negative cash cycle is preferable to a positive cash cycle.", "D) A decrease in the accounts payable period shortens the cash cycle.", "E) The cash cycle plus the accounts receivable period is equal to the operating cycle."], ans: "C" },
+        { id: 15, q: "Which one of the following statements is correct concerning the cash cycle?", options: ["A) The longer the cash cycle, the more likely a company will need external financing.", "B) Increasing the accounts payable period increases the cash cycle.", "C) Accepting a supplier's discount for early payment decreases the cash cycle.", "D) The cash cycle can exceed the operating cycle if the payables period is equal to zero.", "E) Offering early payment discounts to customers will tend to increase the cash cycle."], ans: "A" },
+        { id: 16, q: "Which one of the following actions will tend to increase the inventory period?", options: ["A) Discontinuing all slow-selling merchandise", "B) Selling obsolete inventory below cost just to get rid of it", "C) Buying raw materials only as needed for the manufacturing process", "D) Producing goods on demand versus for inventory", "E) Increasing inventory selection to attract more customers"], ans: "E" },
+        { id: 17, q: "Which one of the following actions will tend to increase the accounts receivable period from its current 14 days?", options: ["A) Tightening the standards for granting credit to customers", "B) Refusing to grant additional credit to any customer who pays late", "C) Increasing the finance charges applied to all customer balances outstanding over 30 days", "D) Granting discounts for cash sales", "E) Eliminating the discount for early payment by credit customers"], ans: "E" },
+        { id: 18, q: "An increase in which one of the following is an indicator that an accounts receivable policy is becoming more restrictive?", options: ["A) Bad debts", "B) Accounts receivable turnover rate", "C) Accounts receivable period", "D) Credit sales", "E) Operating cycle"], ans: "B" },
+        { id: 19, q: "Assume all else held constant. If you pay your suppliers three days sooner, then:", options: ["A) your payables turnover rate will decrease.", "B) you may require additional funds from other sources to fund the cash cycle.", "C) the cash cycle will decrease.", "D) your operating cycle will decrease.", "E) the accounts receivable period will decrease."], ans: "B" },
+        { id: 20, q: "Which one of the following will increase the accounts payable period, all else held constant?", options: ["A) A decrease in the inventory period", "B) An increase in the ending accounts payable balance", "C) An increase in the cash cycle", "D) A decrease in the operating cycle", "E) An increase in the accounts payable turnover rate"], ans: "B" },
+        { id: 21, q: "Which one of the following managers determines which customers must pay cash and which can charge their purchases?", options: ["A) Purchasing manager", "B) Credit manager", "C) Controller", "D) Production manager", "E) Payables manager"], ans: "B" },
+        { id: 22, q: "Which one of the following managers determines when a supplier will be paid?", options: ["A) Controller", "B) Payables manager", "C) Credit manager", "D) Purchasing manager", "E) Production manager"], ans: "B" },
+        { id: 23, q: "The length of time between the purchase of inventory and the receipt of cash from the sale of that inventory is called the:", options: ["A) operating cycle.", "B) inventory period.", "C) accounts receivable period.", "D) accounts payable period.", "E) cash cycle."], ans: "A" },
+        { id: 24, q: "The length of time that elapses between the day at item of inventory is purchased and the day that item sells is called the:", options: ["A) operating cycle.", "B) inventory period.", "C) accounts receivable period.", "D) accounts payable period.", "E) cash cycle."], ans: "B" },
+        { id: 25, q: "The length of time between the sale of inventory and the collection of the payment for that sale is called the:", options: ["A) operating cycle.", "B) inventory period.", "C) accounts receivable period.", "D) accounts payable period.", "E) cash cycle."], ans: "C" },
+        { id: 26, q: "The length of time between the day an item is purchased from a supplier until the day that supplier is paid for that purchase is called the:", options: ["A) operating cycle.", "B) inventory period.", "C) accounts receivable period.", "D) accounts payable period.", "E) cash cycle."], ans: "D" },
+        { id: 27, q: "Central Supply paid off an accounts payable for a toboggan it had purchased on credit three weeks ago. The time period between today and the day Central Supply will receive cash from the sale of this toboggan is called the:", options: ["A) operating cycle.", "B) inventory period.", "C) accounts receivable period.", "D) accounts payable period.", "E) cash cycle."], ans: "E" },
+        { id: 28, q: "Costs that increase as a firm acquires additional current assets are called ________ costs.", options: ["A) carrying", "B) shortage", "C) order", "D) safety", "E) trading"], ans: "A" },
+        { id: 29, q: "Costs that decrease as a company acquires additional current assets are called ________ costs.", options: ["A) carrying", "B) shortage", "C) debt", "D) equity", "E) payables"], ans: "B" },
+        { id: 30, q: "A firm with a flexible short-term financial policy will:", options: ["A) maintain a low balance in accounts receivables.", "B) only have minimal amounts, if any, invested in marketable securities.", "C) invest heavily in inventory.", "D) have low cash balances.", "E) have tight restrictions on granting credit to customers."], ans: "C" },
+        { id: 31, q: "Which one of these is indicative of a short-term restrictive financial policy?", options: ["A) Purchasing inventory on an as-needed basis", "B) Granting credit to all customers", "C) Investing heavily in marketable securities", "D) Maintaining a large accounts receivable balance", "E) Keeping inventory levels high"], ans: "A" },
+        { id: 32, q: "If a company adheres to a restrictive short-term financial policy, then they will generally have:", options: ["A) little, if any, investment in marketable securities.", "B) low inventory turnover rates.", "C) liberal credit terms for customers.", "D) few, if any, stockouts.", "E) high cash balances."], ans: "A" },
+        { id: 33, q: "The Lumber Mart recently replaced its management team. As a result, they are implementing a restrictive short-term financial policy in place of the flexible policy under which they had been operating. Which one of the following should the employees expect as a result of this policy change?", options: ["A) Increasing monthly sales as compared to the prior year", "B) Greater inventory selection", "C) Fewer out-of-stock occurrences", "D) Loss of credit customers", "E) More liberal credit terms"], ans: "D" },
+        { id: 34, q: "A flexible short-term financial policy:", options: ["A) increases the need for long-term financing.", "B) minimizes net working capital.", "C) avoids bad debts by only selling items for cash.", "D) maximizes fixed assets and minimizes current assets.", "E) is most appropriate when carrying costs are high and shortage costs are low."], ans: "A" },
+        { id: 35, q: "A flexible short-term financial policy:", options: ["A) maximizes cashouts.", "B) increases shortage costs due to frequent cash-outs.", "C) tends to decrease sales as compared to a restrictive policy.", "D) incurs more carrying costs than a restrictive policy.", "E) requires only a minimum investment in current assets."], ans: "D" },
+        { id: 36, q: "Shortage costs are least associated with:", options: ["A) stockouts and cashouts.", "B) lost customer goodwill.", "C) disruptions of production schedules.", "D) inventory ordering costs.", "E) opportunity costs incurred by high levels of working capital."], ans: "E" },
+        { id: 37, q: "The optimal investment in current assets for an active company occurs at the point where:", options: ["A) both shortage costs and carrying costs equal zero.", "B) shortage costs are equal to zero.", "C) carrying costs are equal to zero.", "D) carrying costs exceed shortage costs.", "E) shortage costs and carrying costs are equal."], ans: "E" },
+        { id: 38, q: "A company:", options: ["A) with a restrictive financing policy secures sufficient long-term financing to fund all its assets.", "B) with a flexible financing policy frequently invests in marketable securities.", "C) with a flexible financing policy tends to use short-term financing on an ongoing basis.", "D) will tend to avoid short-term financing under both restrictive and flexible financing policies.", "E) with seasonal sales must select flexible financing policies."], ans: "B" },
+        { id: 39, q: "Which one of the following statements is correct?", options: ["A) Seasonal needs are financed with short-term loans when companies adhere to a flexible financing policy.", "B) A flexible financing policy tends to increase the risk of encountering financial distress.", "C) Long-term interest rates tend to be less volatile than short-term rates.", "D) Most companies tend to finance inventory with long-term debt.", "E) Short-term interest rates are generally higher than long-term rates."], ans: "C" },
+        { id: 40, q: "Which one of these best describes a characteristic of a flexible financing policy?", options: ["A) All of a company's assets are financed with long-term debt.", "B) Only long-term assets are financed with long-term debt.", "C) Short-term financing will be used to finance seasonal peaks.", "D) Inventory is purchased with cash.", "E) Low levels of inventory are maintained."], ans: "A" },
+        { id: 41, q: "With a compromise financial policy companies will:", options: ["A) borrow only long-term funds and refuse any loans that require compensating balances.", "B) borrow short-term funds and also invest in marketable securities.", "C) finance all of their assets with various short-term loans.", "D) finance their seasonal asset peaks with short-term debt and the remainder of their assets with equity.", "E) finance half of their fixed assets with long-term debt and half with short-term debt."], ans: "B" },
+        { id: 42, q: "Assume each month has 30 days and a company has a 30-day accounts receivable period. During the second calendar quarter of the year, that company will collect payment for the sales it made during which of the following months?", options: ["A) February, March, and April", "B) April, May and June", "C) December, January, and February", "D) January, February, and March", "E) March, April, and May"], ans: "E" },
+        { id: 43, q: "The Harvester collects 55 percent of sales in the month of sale, 40 percent of sales in the month following the month of sale, and 5 percent of sales in the second month following the month of sale. During the month of April, they will collect:", options: ["A) 55 percent of February sales.", "B) 5 percent of April sales.", "C) 40 percent of March sales.", "D) 5 percent of March sales.", "E) 40 percent of February sales."], ans: "C" },
+        { id: 44, q: "Timko has a 90-day collection period and produces seasonal merchandise. Sales are lowest during the first calendar quarter of a year and the highest during the third quarter. The company maintains a relatively steady level of production which means that its cash disbursements are fairly equal in all quarters. This company is most apt to face a cash-out situation in:", options: ["A) the first quarter.", "B) the second quarter.", "C) the third quarter.", "D) the fourth quarter.", "E) any quarter with equal probabilities of occurrence."], ans: "B" },
+        { id: 45, q: "Summertime Adventures is a seasonal firm that enjoys its highest sales during July and August. The company purchases inventory one month before it is sold and pays for its purchases 60 days after the invoice date. Which one of the following statements is supported by this information?", options: ["A) Inventory purchases will be highest during the months of July and August.", "B) Inventory purchases will be highest during the months of May and June.", "C) Payments to suppliers will be highest during the months of June and July.", "D) Payments to suppliers will be highest during the months of July and August.", "E) Payments to suppliers will be highest during the months of August and September."], ans: "E" },
+        { id: 46, q: "Which one of the following combinations is most apt to cause a company that is generally financially sound to have a negative net cash inflow for a particular quarter?", options: ["A) Low fixed expenses and level monthly sales", "B) A one-time asset purchase and approaching high seasonal sales", "C) Highly seasonal sales and a flexible financing policy", "D) A flexible financing policy and level monthly sales", "E) A large cash sale and low fixed expenses"], ans: "B" },
+        { id: 47, q: "Which one of the following statements is correct concerning a company's cash balance?", options: ["A) Most firms attempt to maintain a zero cash balance at all times.", "B) The cumulative cash surplus shown on a cash budget is equal to the ending cash balance plus the minimum desired cash balance.", "C) On a cash balance report, the cumulative cash surplus at the end of May is used as June's beginning cash balance.", "D) A cumulative cash deficit indicates a borrowing need.", "E) The ending cash balance must equal the minimum desired cash balance."], ans: "D" },
+        { id: 48, q: "A cumulative cash deficit indicates a company:", options: ["A) has at least a short-term need for external funding.", "B) is facing long-term financial distress.", "C) will go out of business within the year.", "D) is capable of funding all of its needs internally.", "E) is using its cash wisely."], ans: "A" },
+        { id: 49, q: "Steve has estimated the cash inflows and outflows for his hardware store for next year. The report that he has prepared recapping these cash flows is called a:", options: ["A) pro forma income statement.", "B) sales projection.", "C) cash budget.", "D) receivables analysis.", "E) credit analysis."], ans: "C" },
+        { id: 50, q: "Taylor Supply has made an agreement with its bank that allows it to borrow up to $10,000 at any time over the next year. This arrangement is called a(n):", options: ["A) floor loan.", "B) open loan.", "C) compensating balance.", "D) line of credit.", "E) bank note."], ans: "D" },
+        { id: 51, q: "Money deposited by a borrower with a bank in a low or non-interest-bearing account as a condition of a loan agreement is called a:", options: ["A) compensating balance.", "B) secured credit deposit.", "C) letter of credit.", "D) line of cash.", "E) pledge."], ans: "A" },
+        { id: 52, q: "Brustle's Pottery either factors or assigns all of its receivables to other firms. This is known as:", options: ["A) accounts receivable financing.", "B) pledged financing.", "C) capital funding.", "D) daily funding.", "E) capital financing."], ans: "A" },
+        { id: 53, q: "Rose's Gift Shop borrows money on a short-term basis by pledging its inventory as collateral. This is an example of a(n):", options: ["A) debenture.", "B) line of credit.", "C) banker's acceptance.", "D) working loan.", "E) inventory loan."], ans: "E" },
+        { id: 54, q: "The most common way to finance a temporary cash deficit is with a:", options: ["A) long-term secured bank loan.", "B) short-term secured bank loan.", "C) short-term issue of corporate bonds.", "D) long-term unsecured bank loan.", "E) short-term unsecured bank loan."], ans: "E" },
+        { id: 55, q: "The primary difference between a line of credit and a revolving credit arrangement is the:", options: ["A) type of collateral used to secure the loan.", "B) length of the credit period.", "C) fact that the line of credit is a secured loan and the revolving credit arrangement is unsecured.", "D) fact that the line of credit is an unsecured loan and the revolving credit arrangement is secured.", "E) loan's classification as either a committed or a non-committed loan."], ans: "B" },
+        { id: 56, q: "A compensating balance:", options: ["A) is required when a company acquires any bank financing other than a line of credit.", "B) is often used by banks as a means of rewarding their best credit customers.", "C) decreases the cost of short-term bank financing.", "D) only applies to zero-interest rate loans.", "E) may be required even if a company never borrows funds."], ans: "E" },
+        { id: 57, q: "High Point Hotel (HPH) has $218,000 in accounts receivable. To finance a major purchase, the company assigns these receivables to Cross Town Bank. Which one of the following statements correctly describes this transaction?", options: ["A) HPH will immediately receive $218,000 and will have no further obligation related to these receivables.", "B) HPH will receive some amount of cash immediately while maintaining full responsibility for any uncollected receivables.", "C) Cross Town Bank accepts full responsibility for the collection of the accounts receivables and, in exchange, immediately pays HPH a discounted value for its receivables.", "D) Cross Town Bank accepts full responsibility for collecting the accounts receivables and pays HPH a discounted price for the accounts collected after the normal collection period has elapsed.", "E) HPH receives the full amount of its receivables upon assignment but must reimburse Cross Town Bank for any uncollected account."], ans: "B" },
+        { id: 58, q: "Which one of the following statements is correct?", options: ["A) The assignment of receivables involves selling accounts receivables at full price.", "B) Lines of credit frequently require a cleanup period.", "C) With maturity factoring, the borrower receives the loan amount immediately.", "D) Commercial paper is short-term financing offered to highly rated corporations by major banks.", "E) Credit card receivables funding is a relatively inexpensive method of borrowing on a short-term basis."], ans: "B" },
+        { id: 59, q: "Which type of arrangement is a hardware store most apt to use to finance its inventory?", options: ["A) Accounts receivable assignment", "B) Blanket inventory lien", "C) Trust receipt", "D) Commercial paper", "E) Field warehouse financing"], ans: "B" },
+        { id: 60, q: "An orange grower is most apt to use which type of financing for its crop?", options: ["A) Accounts receivable assignment", "B) Blanket inventory lien", "C) Trust receipt", "D) Commercial paper", "E) Field warehouse financing"], ans: "E" },
+        { id: 61, q: "All of the following are benefits derived from short-term financial planning with the exception of:", options: ["A) having advance notice of when your firm should require external financing.", "B) knowing for certain what your cash balance will be six months in advance.", "C) knowing if excess funds should be available for investing.", "D) being able to determine the approximate extent of time for which a loan is required.", "E) having the ability to time capital expenditures in order to place the least financial burden possible on a firm."], ans: "B" }
+    ];
+
+    let currentFilter = 'all';
+
+    // 初始化與讀取備忘狀態
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        
+        let flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+
+        questionsData.forEach(item => {
+            const isFlagged = flaggedIds.includes(item.id);
+
+            const card = document.createElement('div');
+            card.className = `question-card ${isFlagged ? 'flagged' : ''}`;
+            card.id = `q-card-${item.id}`;
+            card.setAttribute('data-id', item.id);
+
+            // 題號欄
+            const numDiv = document.createElement('div');
+            numDiv.className = 'question-num';
+            numDiv.innerText = `Q${item.id}`;
+
+            // 旗標按鈕
+            const flagBtn = document.createElement('button');
+            flagBtn.className = 'flag-btn';
+            flagBtn.innerHTML = '🏳';
+            flagBtn.title = '標記為容易出錯';
+            flagBtn.onclick = () => toggleFlag(item.id);
+
+            // 題目內文與答案區
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'question-content';
+
+            const badge = document.createElement('div');
+            badge.className = 'flag-badge';
+            badge.innerText = '⚠️ 容易出錯';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'question-text';
+            textDiv.innerText = item.q;
+
+            // 雙欄選項
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'options-grid';
+            item.options.forEach(opt => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option-item';
+                optDiv.innerText = opt;
+                optionsGrid.appendChild(optDiv);
+            });
+
+            // 答案區塊
+            const ansBox = document.createElement('div');
+            ansBox.className = 'answer-box';
+            ansBox.innerText = `正確答案：${item.ans}`;
+
+            contentDiv.appendChild(badge);
+            contentDiv.appendChild(textDiv);
+            contentDiv.appendChild(optionsGrid);
+            contentDiv.appendChild(ansBox);
+
+            card.appendChild(numDiv);
+            card.appendChild(flagBtn);
+            card.appendChild(contentDiv);
+
+            container.appendChild(card);
+        });
+
+        updateCounter();
+        applyFilterVisibility();
+    }
+
+    // 切換旗標標記狀態
+    function toggleFlag(id) {
+        let flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+        const card = document.getElementById(`q-card-${id}`);
+
+        if (flaggedIds.includes(id)) {
+            flaggedIds = flaggedIds.filter(item => item !== id);
+            card.classList.remove('flagged');
+        } else {
+            flaggedIds.push(id);
+            card.classList.add('flagged');
+        }
+
+        localStorage.setItem('ross12e_flagged_questions', JSON.stringify(flaggedIds));
+        updateCounter();
+
+        if (currentFilter === 'flagged') {
+            applyFilterVisibility();
+        }
+    }
+
+    // 更新計數器
+    function updateCounter() {
+        const flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+        document.getElementById('flagged-count').innerText = flaggedIds.length;
+    }
+
+    // 切換篩選標籤
+    function filterQuestions(type) {
+        currentFilter = type;
+        const buttons = document.querySelectorAll('.btn-filter');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        if(type === 'all') buttons[0].classList.add('active');
+        if(type === 'flagged') buttons[1].classList.add('active');
+
+        applyFilterVisibility();
+    }
+
+    // 執行顯示或隱藏控制
+    function applyFilterVisibility() {
+        const cards = document.querySelectorAll('.question-card');
+        cards.forEach(card => {
+            if (currentFilter === 'all') {
+                card.style.display = 'grid';
+            } else if (currentFilter === 'flagged') {
+                if (card.classList.contains('flagged')) {
+                    card.style.display = 'grid';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // 頁面載入完成後初始化
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

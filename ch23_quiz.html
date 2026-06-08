@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Finance - Chapter 23 複習測驗</title>
+    <style>
+        :root {
+            --primary-color: #3182ce;
+            --primary-light: #ebf8ff;
+            --flagged-border: #ecc94b;
+            --flagged-bg: #fefcbf;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 標頭資訊 */
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #1a202c;
+            font-size: 24px;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #718096;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 控制列 */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #edf2f7;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #fff;
+            border: 1px solid #cbd5e0;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .stats {
+            font-size: 15px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        /* 題目列表與區塊 */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .quiz-item {
+            display: grid;
+            grid-template-columns: auto auto auto 1fr;
+            gap: 15px;
+            align-items: start;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        /* 橫向並排元件 */
+        .q-num {
+            font-weight: bold;
+            color: #4a5568;
+            min-width: 30px;
+            padding-top: 2px;
+        }
+
+        .flag-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            color: #cbd5e0;
+            transition: transform 0.1s;
+        }
+
+        .flag-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* 答案欄隱藏機制 */
+        .ans-box {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #edf2f7; /* 白字/淺灰字達到視覺隱藏 */
+            user-select: text;
+            text-align: center;
+            min-width: 65px;
+        }
+
+        /* 滑鼠移入題目區塊時，答案自動顯示 */
+        .quiz-item:hover .ans-box {
+            color: #e53e3e;
+            background: #fff5f5;
+            border-color: #feb2b2;
+        }
+
+        /* 反白選取時的顏色保障 */
+        .ans-box::selection {
+            background: #3182ce;
+            color: white;
+        }
+
+        .q-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        /* 選項兩欄排列 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 6px 10px;
+            background: #f8fafc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* 易錯標記視覺樣式 */
+        .quiz-item.flagged {
+            border-left: 5px solid var(--flagged-border);
+            border-color: var(--flagged-border);
+            background-color: var(--flagged-bg);
+        }
+
+        .quiz-item.flagged .flag-btn {
+            color: #ecc94b;
+        }
+
+        .quiz-item.flagged .option {
+            background: #fff;
+        }
+
+        /* 隱藏未篩選到的題目 */
+        .quiz-item.hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .quiz-item {
+                grid-template-columns: auto auto 1fr;
+            }
+            .ans-box {
+                grid-column: 1 / -1;
+                margin-top: 5px;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Corporate Finance, 12e (Ross)</h1>
+        <div class="meta-info">
+            <span><strong>科目：</strong>Chapter 23 Options and Corporate Finance: Extensions and Applications</span>
+            <span><strong>功能：</strong>滑鼠移入題區可顯現答案 / 點擊 🏳️ 可標記弱點題</span>
+        </div>
+    </header>
+
+    <div class="controls">
+        <div class="filter-buttons">
+            <button class="btn active" id="btn-all" onclick="filterItems('all')">全部題目</button>
+            <button class="btn" id="btn-flagged" onclick="filterItems('flagged')">已標記易錯題</button>
+        </div>
+        <div class="stats">
+            已標記題數：<span id="flagged-count">0</span> / 24
+        </div>
+    </div>
+
+    <div class="quiz-list" id="quiz-container">
+        </div>
+</div>
+
+<script>
+    // 1-24題的題目數據與對應正確答案
+    const quizData = [
+        { id: 1, ans: "B", q: "A _______ period prohibits executives from exercising their options for a stated period of time.", opts: ["A) investing", "B) freeze-out", "C) valuation", "D) guaranteed", "E) strike"] },
+        { id: 2, ans: "D", q: "Executive stock options generally have all the following characteristics except:", opts: ["A) aligning executive goals with shareholder goals.", "B) linking executive compensation to performance.", "C) providing tax efficiency.", "D) increasing executive base salaries.", "E) putting executive pay at risk."] },
+        { id: 3, ans: "C", q: "The call option on a dividend-paying stock compared to a comparable non-dividend paying stock is:", opts: ["A) more valuable because of the dividend payments.", "B) equal in value.", "C) less valuable because cash dividends lower the stock price.", "D) equal to the cost of the non-dividend paying stock option.", "E) either equal to or greater than the value of the non-dividend paying stock option."] },
+        { id: 4, ans: "D", q: "Which one of these is not a reason why executives place less value on employee stock options than their face value would indicate?", opts: ["A) The option's value depends on the stock price exceeding the exercise price.", "B) Options must generally be held for a period of time.", "C) Options may create a highly undiversified portfolio for the executive.", "D) Options always create taxable income for the executive when granted.", "E) Options could be out of the money."] },
+        { id: 5, ans: "C", q: "The value of an executive stock option will be lowered if:", opts: ["A) the volatility of the firm's stock returns increases.", "B) the executive improves firm performance causing the stock price to rise.", "C) a freeze-out period is required.", "D) the firm extends the option expiration date.", "E) the strike price is lowered."] },
+        { id: 6, ans: "A", q: "Investing in a negative NPV project today may be a feasible choice if:", opts: ["A) the project has future option alternatives.", "B) all the project's future options were included in the NPV analysis.", "C) the current discount rate is low.", "D) all the project's future options will be ignored by decision makers.", "E) the discount rate is expected to increase over time."] },
+        { id: 7, ans: "E", q: "The opportunity to defer investing in a project until a later date may have value primarily because:", opts: ["A) the cost of capital may increase.", "B) project cash flows may be lower in the future.", "C) investment costs tend to increase over time.", "D) the option to abandon may disappear.", "E) market conditions may improve."] },
+        { id: 8, ans: "D", q: "Permanently rejecting an investment project today may not be a wise decision primarily because:", opts: ["A) the size of the firm will be less than it would be with the project.", "B) there are always errors in the estimation of NPVs.", "C) the management team may be replaced.", "D) the company is foregoing all future options.", "E) the firm may not have any other investment opportunities."] },
+        { id: 9, ans: "D", q: "Net present value analysis frequently ignores:", opts: ["A) project risk.", "B) cash flows after the first three years.", "C) the time value of money.", "D) some or all of a project's options.", "E) start-up costs."] },
+        { id: 10, ans: "D", q: "When valuing a project using the Black-Scholes option pricing model, R is set equal to the:", opts: ["A) historical real market rate of return.", "B) annually compounded risk-free rate.", "C) expected future real market rate of return.", "D) continuously compounded risk-free rate.", "E) project's CAPM rate of return."] },
+        { id: 11, ans: "E", q: "Which one of these statements is true?", opts: ["A) If virtually all projects have embedded options, then ignoring these options does not affect the value of the projects.", "B) Every business will benefit if it exercises its expansion option.", "C) The option to abandon a project lowers the project's value.", "D) Start-up businesses do not have any options until they have succeeded for one year.", "E) Every business idea has at least two possible outcomes."] },
+        { id: 12, ans: "D", q: "Which one of the following is not included as an input for the Black-Scholes option pricing model?", opts: ["A) Standard deviation", "B) Time to maturity", "C) Exercise price", "D) Par value", "E) Continuously compounded interest rate"] },
+        { id: 13, ans: "B", q: "With the binominal option pricing model, it is reasonable to assume:", opts: ["A) there is a varying rate of price change from one time interval to the next time interval.", "B) any new information impacting prices is similar from one interval to another interval.", "C) the discount rate increases with each time interval.", "D) the call price will only be usable if the time interval is extremely small.", "E) that each project is limited to two outcomes over its life."] },
+        { id: 14, ans: "E", q: "A branching tree depicting the binomial model of a projected investment:", opts: ["A) should capture all possible future paths the investment could take.", "B) will have more up-branches than down-branches if there are two or more time intervals.", "C) can only have one final point that has an option value of zero.", "D) only depicts paths that will lead to acceptable project decisions.", "E) should lead to the same result if you take an up-branch followed by a down-branch or a down-branch followed by an up-branch."] },
+        { id: 15, ans: "D", q: "Under risk neutrality, the expected return on an asset will equal:", opts: ["A) the market risk premium.", "B) the market rate of return.", "C) zero.", "D) the risk-free rate of interest.", "E) the asset beta times the market risk premium."] },
+        { id: 16, ans: "E", q: "The binomial option pricing model is:", opts: ["A) bell-curve shaped.", "B) symmetrical.", "C) hyperbolic.", "D) asymmetric.", "E) curvilinear."] },
+        { id: 17, ans: "D", q: "If an infinite number of intervals is applied to the binomial option pricing model, then the value of a call is equal to:", opts: ["A) the risk-free rate of return.", "B) zero.", "C) the exercise price.", "D) the Black-Scholes model's call value.", "E) the stock price."] },
+        { id: 18, ans: "B", q: "Assume you are determining the risk-neutral probabilities of a price increase and decrease. In this situation, you know the expected return on the asset must equal the:", opts: ["A) sponsoring firm's cost of capital.", "B) risk-free rate.", "C) market rate of return.", "D) annual inflation rate.", "E) CAPM rate of return."] },
+        { id: 19, ans: "D", q: "In the binomial option pricing model the:", opts: ["A) number of intervals required for convergence is quite large.", "B) interval time span decreases as time moves forward.", "C) result based on infinitesimally small intervals will differ significantly from the value developed by the Black-Scholes model.", "D) percentage increase in price in each interval can differ from the percentage decrease in price.", "E) value of u remains constant as the number of intervals increases."] },
+        { id: 20, ans: "C", q: "Sam owns an oil field with a number of producing wells. In the past, he has started and stopped production of these wells as the price of oil fluctuated over time. Assume the government imposes additional requirements on non-producing wells that are still production capable. These requirements are expected to increase the cost of stopping well production by 30 percent. As a result, Sam should be:", opts: ["A) keeping all wells open continuously.", "B) closing wells only if he plans to keep them closed permanently.", "C) willing to keep wells operating at a lower level of profitability than he has in the past.", "D) increasing the cost of capital he applies to his well evaluation analysis.", "E) opening wells at a lower popen price."] },
+        { id: 21, ans: "D", q: "Assume a firm in the extraction industry has major assets consisting solely of cash, equipment, and a closed facility but yet the firm appears to have extraordinary value. This value is least apt to be attributable to the:", opts: ["A) low exercise price held by the shareholders.", "B) option to open the facility when prices rise dramatically.", "C) option to keep the facility closed for an extended period of time.", "D) current operating cash flow.", "E) potential sale of the firm."] },
+        { id: 22, ans: "A", q: "If a project has both expansion and abandonment options, then the:", opts: ["A) shorter the available life of the project the less valuable the project is.", "B) longer the available life of the project the less valuable the project is.", "C) options will offset each other and therefore add no value to the project.", "D) project life becomes irrelevant.", "E) project should always be accepted."] },
+        { id: 23, ans: "A", q: "The option to abandon is:", opts: ["A) a real option.", "B) usually of little value because of the costs associated with abandonment.", "C) irrelevant in capital budgeting analysis.", "D) generally ignored.", "E) of no value to a project."] },
+        { id: 24, ans: "E", q: "Which one of these statements is true?", opts: ["A) The Black-Scholes model is most applicable to complex situations.", "B) The binomial model is limited to a two-period time sequence.", "C) The binomial model is limited to ten time intervals for any single analysis.", "D) The binomial model is basically equivalent to the Black-Scholes model when there is a single time interval.", "E) The Black-Scholes model is simpler to use, but for complex situations, the binomial model is preferred."] }
+    ];
+
+    let flaggedItems = JSON.parse(localStorage.getItem('cf_flagged_questions')) || [];
+    let currentFilter = 'all';
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+
+        quizData.forEach(item => {
+            const isFlagged = flaggedItems.includes(item.id);
+            
+            const quizItem = document.createElement('div');
+            quizItem.className = `quiz-item ${isFlagged ? 'flagged' : ''}`;
+            quizItem.id = `q-item-${item.id}`;
+            quizItem.setAttribute('data-id', item.id);
+
+            quizItem.innerHTML = `
+                <div class="q-num">Q${item.id}</div>
+                <button class="flag-btn" onclick="toggleFlag(${item.id}, event)" title="標記為容易出錯">
+                    ${isFlagged ? '🚩' : '🏳️'}
+                </button>
+                <div class="ans-box">ANS: ${item.ans}</div>
+                <div>
+                    <div class="q-text">${item.q}</div>
+                    <div class="options-grid">
+                        ${item.opts.map(opt => `<div class="option">${opt}</div>`).join('')}
+                    </div>
+                </div>
+            `;
+            container.appendChild(quizItem);
+        });
+
+        updateStats();
+        applyFilter();
+    }
+
+    function toggleFlag(id, event) {
+        event.stopPropagation();
+        const index = flaggedItems.indexOf(id);
+        const itemEl = document.getElementById(`q-item-${id}`);
+        const btnEl = itemEl.querySelector('.flag-btn');
+
+        if (index > -1) {
+            flaggedItems.splice(index, 1);
+            itemEl.classList.remove('flagged');
+            btnEl.innerHTML = '🏳️';
+        } else {
+            flaggedItems.push(id);
+            itemEl.classList.add('flagged');
+            btnEl.innerHTML = '🚩';
+        }
+
+        localStorage.setItem('cf_flagged_questions', JSON.stringify(flaggedItems));
+        updateStats();
+        
+        if (currentFilter === 'flagged') {
+            applyFilter();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('flagged-count').innerText = flaggedItems.length;
+    }
+
+    function filterItems(type) {
+        currentFilter = type;
+        document.getElementById('btn-all').classList.toggle('active', type === 'all');
+        document.getElementById('btn-flagged').classList.toggle('active', type === 'flagged');
+        applyFilter();
+    }
+
+    function applyFilter() {
+        const items = document.querySelectorAll('.quiz-item');
+        items.forEach(item => {
+            const id = parseInt(item.getAttribute('data-id'));
+            if (currentFilter === 'flagged' && !flaggedItems.includes(id)) {
+                item.classList.add('hidden');
+            } else {
+                item.classList.remove('hidden');
+            }
+        });
+    }
+
+    // 頁面加載時執行初始化
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

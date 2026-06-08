@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CH26 Short-Term Finance and Planning — 考古題練習</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0f0f13;
+    --surface: #18181f;
+    --surface2: #22222c;
+    --border: #2e2e3d;
+    --accent: #7ecfb3;
+    --accent2: #e8c96d;
+    --danger: #e87d6d;
+    --text: #e8e4dc;
+    --muted: #7a7890;
+    --flagged-bg: #0e1a18;
+    --flagged-border: #7ecfb3;
+    --answer-hidden: #22222c;
+    --answer-text: #22222c;
+    --answer-hover: #e8e4dc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .chapter-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 8px 20px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--accent);
+    color: #0f1a18;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .tab-btn:hover:not(.active) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .flag-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .flag-count .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+
+  .q-card:hover { border-color: #3e3e52; }
+
+  .q-card.flagged {
+    background: var(--flagged-bg);
+    border-color: var(--flagged-border);
+    border-left: 3px solid var(--accent);
+  }
+
+  .q-card.hidden-by-filter { display: none; }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 18px 18px 0;
+  }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    min-width: 36px;
+    padding-top: 2px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .q-answer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    width: 28px; height: 28px;
+    border-radius: 2px;
+    background: var(--answer-hidden);
+    color: var(--answer-text);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-right: 14px;
+    margin-top: 1px;
+    border: 1px solid var(--border);
+    transition: color 0.15s, background 0.15s;
+    user-select: all;
+    cursor: default;
+  }
+
+  .q-card:hover .q-answer {
+    color: var(--answer-hover);
+    background: var(--surface2);
+    border-color: var(--accent2);
+  }
+
+  .flag-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    width: 28px; height: 28px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-right: 14px;
+    margin-top: 1px;
+    font-size: 14px;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+
+  .flag-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(126,207,179,0.08);
+  }
+
+  .flagged .flag-btn {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(126,207,179,0.12);
+  }
+
+  .q-text {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.65;
+    padding-top: 3px;
+  }
+
+  .flagged-label {
+    display: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(126,207,179,0.1);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .flagged .flagged-label { display: inline-block; }
+
+  .q-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    padding: 12px 18px 18px 88px;
+  }
+
+  .opt {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    line-height: 1.5;
+  }
+
+  .opt-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4a4a62;
+    flex-shrink: 0;
+  }
+
+  .q-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 18px;
+  }
+
+  .q-meta {
+    padding: 8px 18px 14px 88px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #3d3d52;
+    letter-spacing: 0.06em;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--muted);
+    font-size: 14px;
+    display: none;
+  }
+
+  .empty-state.visible { display: block; }
+  .empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+
+  @media (max-width: 600px) {
+    .q-options { grid-template-columns: 1fr; padding-left: 60px; }
+    .q-meta { padding-left: 60px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="chapter-label">Corporate Finance 12e · Ross · Chapter 26</div>
+    <h1>Short-Term Finance and Planning</h1>
+    <div class="meta">考古題練習 &nbsp;·&nbsp; 題目 1–56 &nbsp;·&nbsp; 答案隱藏（滑鼠移至題目可顯示）</div>
+  </header>
+
+  <div class="controls">
+    <button class="tab-btn active" onclick="filterQuestions('all')">全部題目</button>
+    <button class="tab-btn" onclick="filterQuestions('flagged')">已標記</button>
+    <div class="flag-count">
+      <span class="dot"></span>
+      <span id="flagCount">0</span> 題已標記
+    </div>
+  </div>
+
+  <div id="quizContainer"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="icon">🚩</div>
+    尚未標記任何題目
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'ch26_flags';
+const questions = [
+  {
+    num: 1,
+    text: 'Net working capital is defined as the:',
+    options: { A: 'current assets of a business.', B: 'difference between current assets and current liabilities.', C: 'present value of short-term cash flows.', D: 'difference between all assets and liabilities.', E: 'difference between total current assets and cash.' },
+    answer: 'B', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 2,
+    text: 'Which one of the following is a source of cash?',
+    options: { A: 'An increase in accounts receivable', B: 'An increase in fixed assets', C: 'A decrease in long-term debt', D: 'The payment of a cash dividend', E: 'An increase in accounts payable' },
+    answer: 'E', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 3,
+    text: 'Which one of the following is a use of cash?',
+    options: { A: 'Selling goods from inventory', B: 'Sale of a marketable security held by the firm', C: 'Submitting taxes to the government', D: 'Obtainment of a long-term loan', E: 'Collection of a past-due accounts receivable' },
+    answer: 'C', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 4,
+    text: 'Which one of the following will increase net working capital? Assume the current ratio is greater than 1.0.',
+    options: { A: 'Using cash to pay an accounts payable', B: 'Using cash to pay a long-term debt', C: 'Selling inventory at cost', D: 'Collecting an accounts receivable', E: 'Using a long-term loan to buy inventory' },
+    answer: 'E', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 5,
+    text: 'Which one of the following will decrease the net working capital of a firm? Assume the current ratio is greater than 1.0.',
+    options: { A: 'Selling inventory at a profit', B: 'Collecting an accounts receivable', C: 'Paying a payment on a long-term debt', D: 'Selling a fixed asset for book value', E: 'Paying an accounts payable' },
+    answer: 'C', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 6,
+    text: 'One use of cash is represented by:',
+    options: { A: 'an increase in borrowing.', B: 'an increase in operating cash flow.', C: 'a decrease in accounts payable.', D: 'an increase in notes payable.', E: 'a decrease in inventory.' },
+    answer: 'C', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 7,
+    text: 'A use of cash is associated with:',
+    options: { A: 'a decrease in a liability.', B: 'an increase in an asset.', C: 'an increase in retained earnings.', D: 'both an increase in an asset and an increase in retained earnings.', E: 'both a decrease in a liability and an increase in an asset.' },
+    answer: 'E', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 8,
+    text: 'Cash increases when:',
+    options: { A: 'long-term debt decreases.', B: 'equity decreases.', C: 'current liabilities decrease.', D: 'accounts payable increases.', E: 'fixed assets increase.' },
+    answer: 'D', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 9,
+    text: 'If a firm needs to increase its cash holdings it could:',
+    options: { A: 'increase fixed assets.', B: 'decrease accounts payable.', C: 'decrease long-term debt.', D: 'increase other current assets.', E: 'increase current liabilities.' },
+    answer: 'E', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 10,
+    text: 'Cash decreases when:',
+    options: { A: 'current assets other than cash increase.', B: 'fixed assets decrease.', C: 'current liabilities increase.', D: 'retained earnings increase.', E: 'long-term debt increases.' },
+    answer: 'A', section: '26.1 Tracing Cash and Net Working Capital'
+  },
+  {
+    num: 11,
+    text: 'The cash cycle is defined as the time between:',
+    options: { A: 'the arrival of inventory and cash collected from receivables.', B: 'selling a product and paying the supplier of that product.', C: 'selling a product and collecting the accounts receivable.', D: 'cash disbursements and cash collection for an item.', E: 'the sale of inventory and cash collection.' },
+    answer: 'D', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 12,
+    text: 'The cash cycle equals the:',
+    options: { A: 'inventory period plus the accounts receivable period.', B: 'change in net working capital divided by daily sales.', C: 'operating cycle plus the accounts payable period.', D: 'operating cycle minus the inventory period.', E: 'operating cycle minus the accounts payable period.' },
+    answer: 'E', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 13,
+    text: 'The operating cycle can be decreased by:',
+    options: { A: 'paying accounts payable faster.', B: 'discontinuing the discount given for early payment of an accounts receivable.', C: 'decreasing the inventory turnover rate.', D: 'collecting accounts receivable faster.', E: 'increasing the accounts payable turnover rate.' },
+    answer: 'D', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 14,
+    text: 'The operating cycle will decrease if you decrease the:',
+    options: { A: 'days sales in inventory.', B: 'days in accounts payable.', C: 'cash cycle by increasing the accounts payable period.', D: 'accounts receivable turnover rate.', E: 'speed at which inventory is sold.' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 15,
+    text: 'Which one of the following will not affect the operating cycle?',
+    options: { A: 'Decreasing the payables turnover from 7 times to 6 times', B: 'Increasing the days sales in receivables', C: 'Decreasing the inventory turnover rate', D: 'Increasing the average receivables balance', E: 'Decreasing the credit repayment times for the firm\'s customers' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 16,
+    text: 'You can decrease the cash cycle by:',
+    options: { A: 'increasing the cash discount offered to customers who pay their accounts early.', B: 'increasing the percentage of customers paying with credit rather than cash.', C: 'increasing the amount of raw materials kept in inventory.', D: 'paying your suppliers earlier to receive a discount on your purchases.', E: 'increasing your inventory to prevent stock-outs.' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 17,
+    text: 'The cash cycle will decrease as a result of increasing the:',
+    options: { A: 'payables turnover.', B: 'days sales in inventory.', C: 'operating cycle.', D: 'inventory turnover rate.', E: 'accounts receivable period.' },
+    answer: 'D', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 18,
+    text: 'ABC Manufacturing is now changing its policy and only producing a product when it receives an actual order from a customer. All else equal, this change will:',
+    options: { A: 'increase the operating cycle.', B: 'lengthen the accounts receivable period.', C: 'shorten the accounts payable period.', D: 'decrease the cash cycle.', E: 'decrease the inventory turnover rate.' },
+    answer: 'D', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 19,
+    text: 'Which one of these statements concerning the cash cycle is correct?',
+    options: { A: 'The cash cycle is equal to the operating cycle minus the inventory period.', B: 'A negative cash cycle is actually preferable to a positive cash cycle.', C: 'Granting credit to slower paying customers tends to decrease the cash cycle.', D: 'The cash cycle plus the accounts receivable period is equal to the operating cycle.', E: 'The most desirable cash cycle is the one that equals zero days.' },
+    answer: 'B', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 20,
+    text: 'Which one of these statements is correct concerning the cash cycle?',
+    options: { A: 'The longer the cash cycle, the more likely a firm will need external financing.', B: 'Increasing the accounts payable period increases the cash cycle.', C: 'A positive cash cycle is preferable to a negative cash cycle.', D: 'The cash cycle can exceed the operating cycle if the payables period is equal to zero.', E: 'Adopting a more liberal accounts receivable policy will tend to decrease the cash cycle.' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 21,
+    text: 'If The Deli delays paying its suppliers by an additional ten days, then:',
+    options: { A: 'its payables turnover rate will increase.', B: 'it should require less bank financing of its daily operations.', C: 'its cash cycle will increase by ten days.', D: 'its operating cycle will increase by ten days.', E: 'its stock-out costs will rise.' },
+    answer: 'B', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 22,
+    text: 'Given a fixed level of sales and a constant profit margin, an increase in the accounts payable period can result from:',
+    options: { A: 'an increase in the cost of goods sold account value.', B: 'an increase in the ending accounts payable balance.', C: 'an increase in the cash cycle.', D: 'a decrease in the operating cycle.', E: 'a decrease in the average accounts payable balance.' },
+    answer: 'B', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 23,
+    text: 'The accounts receivable policy is generally set by the:',
+    options: { A: 'purchasing manager.', B: 'credit manager.', C: 'controller.', D: 'production manager.', E: 'payables manager.' },
+    answer: 'B', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 24,
+    text: 'The manager responsible for applying payments to customer\'s accounts is the:',
+    options: { A: 'controller.', B: 'payables manager.', C: 'credit manager.', D: 'purchasing manager.', E: 'production manager.' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 25,
+    text: 'The length of time between the acquisition of inventory and the collection of cash from receivables is called the:',
+    options: { A: 'operating cycle.', B: 'inventory period.', C: 'accounts receivable period.', D: 'accounts payable period.', E: 'cash cycle.' },
+    answer: 'A', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 26,
+    text: 'The length of time between the acquisition of inventory and its sale is called the:',
+    options: { A: 'operating cycle.', B: 'inventory period.', C: 'accounts receivable period.', D: 'accounts payable period.', E: 'cash cycle.' },
+    answer: 'B', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 27,
+    text: 'The length of time between the sale of inventory and the collection of cash from receivables is called the:',
+    options: { A: 'operating cycle.', B: 'inventory period.', C: 'accounts receivable period.', D: 'accounts payable period.', E: 'cash cycle.' },
+    answer: 'C', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 28,
+    text: 'The length of time between the acquisition of inventory by a firm and the payment by the firm for that inventory is called the:',
+    options: { A: 'operating cycle.', B: 'inventory period.', C: 'accounts receivable period.', D: 'accounts payable period.', E: 'cash cycle.' },
+    answer: 'D', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 29,
+    text: 'The length of time between the payment for inventory and the collection of cash from receivables is called the:',
+    options: { A: 'operating cycle.', B: 'inventory period.', C: 'accounts receivable period.', D: 'accounts payable period.', E: 'cash cycle.' },
+    answer: 'E', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 30,
+    text: 'If the average accounts receivable that a firm holds decreases without any decrease in credit sales, the operating cycle will:',
+    options: { A: 'remain constant because sales remained constant.', B: 'remain constant because the change will only affect the cash cycle.', C: 'decrease because the days\' sales outstanding will decrease.', D: 'increase because the accounts receivable turnover will decrease.', E: 'decrease because the accounts receivable turnover will decrease.' },
+    answer: 'C', section: '26.2 The Operating Cycle and the Cash Cycle'
+  },
+  {
+    num: 31,
+    text: 'Flexible short-term financial policies tend to:',
+    options: { A: 'maintain low accounts receivable balances.', B: 'support few investments in marketable securities.', C: 'minimize the investment in inventory.', D: 'maintain large cash balances.', E: 'tightly restrict credit sales.' },
+    answer: 'D', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 32,
+    text: 'The short-term financial policy a firm adopts will be reflected in:',
+    options: { A: 'the size of the firm\'s investment in current assets.', B: 'the financing of current assets.', C: 'the financing of fixed assets.', D: 'both the size and the financing of current assets.', E: 'both the size and the financing of fixed assets.' },
+    answer: 'D', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 33,
+    text: 'Costs of the firm that rise with increased levels of investment in its current assets are called ________ costs.',
+    options: { A: 'carrying', B: 'shortage', C: 'order', D: 'safety', E: 'trading' },
+    answer: 'A', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 34,
+    text: 'Costs of the firm that fall with increased levels of investment in its current assets are called ________ costs.',
+    options: { A: 'carrying', B: 'shortage', C: 'debt', D: 'equity', E: 'payables' },
+    answer: 'B', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 35,
+    text: 'A restrictive short-term financial policy tends to:',
+    options: { A: 'reduce future sales more so than a flexible policy.', B: 'grant credit to more customers.', C: 'incur more carrying costs than a flexible policy does.', D: 'encourage credit sales over cash sales.', E: 'reduce order costs as compared to a more flexible policy.' },
+    answer: 'A', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 36,
+    text: 'A firm that adopts a flexible short-term financial policy is more apt to have:',
+    options: { A: 'lower carrying costs than shortage costs.', B: 'lower shortage costs than carrying costs.', C: 'stricter limits on credit sales than the average firm.', D: 'a relatively low level of current assets.', E: 'greater short-term financing needs than if the firm adopted a restrictive policy.' },
+    answer: 'A', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 37,
+    text: 'A flexible short-term financial policy:',
+    options: { A: 'increases the likelihood that a firm will face financial distress.', B: 'incurs an opportunity cost due to the rate of return that applies to short-term assets.', C: 'advocates a smaller investment in net working capital than a restrictive policy does.', D: 'increases the probability that a firm will earn high returns on all its assets.', E: 'utilizes short-term financing to fund all the firm\'s assets.' },
+    answer: 'B', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 38,
+    text: 'Miller\'s Hardware has a flexible short-term financing policy. Over the course of one year, the firm should expect to have some months that allow it to:',
+    options: { A: 'repay all its debts.', B: 'invest in marketable securities.', C: 'reduce its total costs below the firm\'s normal minimum total cost point.', D: 'finance all its assets with short-term loans.', E: 'earn high returns on all its current assets.' },
+    answer: 'B', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 39,
+    text: 'Shortage costs include all the following except the:',
+    options: { A: 'opportunity costs related to a low return on assets.', B: 'order costs.', C: 'disruption of production schedules.', D: 'production setup costs.', E: 'lost sales.' },
+    answer: 'A', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 40,
+    text: 'Given a flexible financing policy, a growing firm generally has a permanent requirement for:',
+    options: { A: 'both current and long-term assets.', B: 'long-term assets only.', C: 'short-term debt.', D: 'both short- and long-term debt.', E: 'current assets and short-term debt.' },
+    answer: 'A', section: '26.3 Some Aspects of Short-Term Financial Policy'
+  },
+  {
+    num: 41,
+    text: 'If your accounts receivable period is 30 days, you will collect payment for your ________ sales during the second quarter of a calendar year.',
+    options: { A: 'December, January, and February', B: 'January, February, and March', C: 'February and March', D: 'February, March, and April', E: 'March, April and May' },
+    answer: 'E', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 42,
+    text: 'Baxter\'s collects 30 percent of its sales in the month of sale, 55 percent in the month following, and 13 percent in the second month following. The company will collect ________ sales during the month of May.',
+    options: { A: '30 percent of May', B: '55 percent of March', C: '13 percent of April', D: '55 percent of May', E: '13 percent of February' },
+    answer: 'A', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 43,
+    text: 'A manufacturing firm has a 90-day collection period, least sales in Q1, highest in Q3, and steady production. The firm is most apt to face a cash-out situation in:',
+    options: { A: 'the first quarter.', B: 'the second quarter.', C: 'the third quarter.', D: 'the fourth quarter.', E: 'any quarter, equally.' },
+    answer: 'B', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 44,
+    text: 'A financially solid firm is most apt to have a quarterly cash shortfall when it encounters a:',
+    options: { A: 'period of relatively constant sales.', B: 'major fixed asset expenditure.', C: 'period of rising interest rates.', D: 'period of declining interest rates.', E: 'period of increased cash collections.' },
+    answer: 'B', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 45,
+    text: 'Which one of these statements is true?',
+    options: { A: 'The cumulative finance surplus requirement is computed prior to adjusting for the minimum cash balance.', B: 'A financially sound firm will always have a positive quarterly net cash flow.', C: 'A negative cumulative cash surplus indicates a borrowing need.', D: 'Most firms plan on maintaining a zero cash balance.', E: 'The minimum cash balance generally increases on a quarterly basis.' },
+    answer: 'C', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 46,
+    text: 'A cumulative cash deficit indicates a firm:',
+    options: { A: 'has at least a short-term need for external funding.', B: 'is facing long-term financial distress.', C: 'will go out of business within the year.', D: 'is capable of funding all its needs internally.', E: 'is using its cash wisely.' },
+    answer: 'A', section: '26.4 Cash Budgeting'
+  },
+  {
+    num: 47,
+    text: 'A prearranged, short-term bank loan up to a specified limit, made on a formal or informal basis, is called a:',
+    options: { A: 'letter of credit.', B: 'cleanup loan.', C: 'compensating balance.', D: 'line of credit.', E: 'roll-over.' },
+    answer: 'D', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 48,
+    text: 'A fraction of the available credit on a loan agreement deposited by the borrower with the bank in a low or non-interest-bearing account is called a:',
+    options: { A: 'compensating balance.', B: 'cleanup loan.', C: 'letter of credit.', D: 'line of credit.', E: 'roll-over.' },
+    answer: 'A', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 49,
+    text: 'A short-term loan where the lender holds the borrower\'s receivables as security is called:',
+    options: { A: 'a compensating balance.', B: 'assigned receivables financing.', C: 'a letter of credit.', D: 'factored receivables financing.', E: 'a bond.' },
+    answer: 'B', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 50,
+    text: 'A type of short-term loan where the borrower sells its receivables to the lender up-front, but at a discount to face value, is called:',
+    options: { A: 'a compensating balance.', B: 'assigned receivables financing.', C: 'a letter of credit.', D: 'factored receivables financing.', E: 'a bond.' },
+    answer: 'D', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 51,
+    text: 'A short-term loan which is secured by inventory that is held in trust is referred to as:',
+    options: { A: 'a blanket inventory lien.', B: 'a secured line of credit.', C: 'a banker\'s acceptance.', D: 'a trust receipt financing arrangement.', E: 'field warehousing financing.' },
+    answer: 'D', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 52,
+    text: 'The most common means of financing a temporary cash deficit is a:',
+    options: { A: 'long-term secured bank loan.', B: 'short-term secured bank loan.', C: 'short-term issue of corporate bonds.', D: 'long-term unsecured bank loan.', E: 'short-term unsecured bank loan.' },
+    answer: 'E', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 53,
+    text: 'A compensating balance:',
+    options: { A: 'requirement generally applies to inventory-type loans.', B: 'is a means of paying for banking services received.', C: 'requirement is generally set equal to one percent of the amount borrowed.', D: 'decreases the cost of short-term bank financing.', E: 'refunds a portion of the borrower\'s interest if a loan is repaid early.' },
+    answer: 'B', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 54,
+    text: 'Which one of these statements is correct?',
+    options: { A: 'A farmer generally uses trust receipt financing to finance operations during the growing season.', B: 'An auto dealer is most apt to use purchase order financing.', C: 'A drug store is most apt to use trust receipt financing.', D: 'Trust receipt financing is most applicable to large, easily identifiable types of inventory.', E: 'Blanket inventory lien financing is another term for purchase order financing.' },
+    answer: 'D', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 55,
+    text: 'Commercial paper is generally issued:',
+    options: { A: 'by large firms.', B: 'for 190 days or less.', C: 'by commercial banks.', D: 'for 90 to 180 days.', E: 'at the prime rate offered by the firm\'s bank.' },
+    answer: 'A', section: '26.5 The Short-Term Financial Plan'
+  },
+  {
+    num: 56,
+    text: 'Which party(ies) is(are) ultimately responsible for an invoice from a supplier that is subject to a bankers\' acceptance?',
+    options: { A: 'The bank which issued the acceptance', B: 'The purchasing firm', C: 'The investors who purchased the banker\'s acceptance', D: 'The vendor who issued the invoice', E: 'Both the bank and the purchasing firm jointly' },
+    answer: 'A', section: '26.5 The Short-Term Financial Plan'
+  }
+];
+
+const STORAGE_KEY_26 = 'ch26_flags';
+let flags = JSON.parse(localStorage.getItem(STORAGE_KEY_26) || '[]');
+let currentFilter = 'all';
+
+function saveFlags() { localStorage.setItem(STORAGE_KEY_26, JSON.stringify(flags)); }
+
+function updateFlagCount() {
+  document.getElementById('flagCount').textContent = flags.length;
+}
+
+function toggleFlag(num) {
+  const idx = flags.indexOf(num);
+  if (idx === -1) flags.push(num); else flags.splice(idx, 1);
+  saveFlags(); updateFlagCount();
+  const card = document.querySelector(`.q-card[data-num="${num}"]`);
+  if (card) {
+    card.classList.toggle('flagged', flags.includes(num));
+    if (currentFilter === 'flagged' && !flags.includes(num)) {
+      card.classList.add('hidden-by-filter');
+      checkEmpty();
+    }
+  }
+}
+
+function filterQuestions(type) {
+  currentFilter = type;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && type === 'all') || (i === 1 && type === 'flagged'));
+  });
+  document.querySelectorAll('.q-card').forEach(card => {
+    const num = parseInt(card.dataset.num);
+    if (type === 'flagged') card.classList.toggle('hidden-by-filter', !flags.includes(num));
+    else card.classList.remove('hidden-by-filter');
+  });
+  checkEmpty();
+}
+
+function checkEmpty() {
+  const visible = document.querySelectorAll('.q-card:not(.hidden-by-filter)').length;
+  document.getElementById('emptyState').classList.toggle('visible', visible === 0 && currentFilter === 'flagged');
+}
+
+function renderQuestions() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  questions.forEach(q => {
+    const isFlagged = flags.includes(q.num);
+    const opts = Object.entries(q.options);
+    const optHtml = opts.map(([k, v]) =>
+      `<div class="opt"><span class="opt-key">${k})</span> <span>${v}</span></div>`
+    ).join('');
+    const card = document.createElement('div');
+    card.className = `q-card${isFlagged ? ' flagged' : ''}`;
+    card.dataset.num = q.num;
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.num}.</div>
+        <div class="q-answer" title="Hover to reveal answer">${q.answer}</div>
+        <button class="flag-btn" onclick="toggleFlag(${q.num})" title="標記此題">🚩</button>
+        <div class="q-text">${q.text.replace(/\n/g,'<br>')}</div>
+        <div class="flagged-label">已標記</div>
+      </div>
+      <div class="q-options">${optHtml}</div>
+      <div class="q-divider"></div>
+      <div class="q-meta">${q.section}</div>
+    `;
+    container.appendChild(card);
+  });
+  updateFlagCount();
+}
+
+renderQuestions();
+</script>
+</body>
+</html>

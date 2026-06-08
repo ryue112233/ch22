@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Finance (Ross 12e) - Chapter 24 互動複習題庫</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #007bff;
+            --border-color: #dee2e6;
+            --flagged-bg: #fff3cd;
+            --flagged-border: #ffc107;
+            --flagged-color: #856404;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            color: #212529;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #e9ecef;
+            padding: 12px 20px;
+            border-radius: 6px;
+        }
+
+        .filter-btn {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .stats {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .quiz-container {
+            margin-top: 20px;
+        }
+
+        .question-card {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        /* 橫向並排配置：旗標、題號、內容、答案 */
+        .flag-box {
+            flex-shrink: 0;
+        }
+
+        .flag-btn {
+            background: none;
+            border: 1px solid #ced4da;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .flag-btn:hover {
+            background-color: #f1f3f5;
+        }
+
+        .q-number {
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 30px;
+            padding-top: 4px;
+        }
+
+        .q-body {
+            flex-grow: 1;
+        }
+
+        .q-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        /* 選項採兩欄格式呈現 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 8px;
+        }
+
+        .option-item {
+            padding: 4px 0;
+            font-size: 14.5px;
+        }
+
+        /* 答案欄配置 */
+        .ans-box {
+            flex-shrink: 0;
+            min-width: 100px;
+            text-align: right;
+            padding-top: 4px;
+        }
+
+        .ans-label {
+            font-size: 12px;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* 答案隱藏與顯現機制 (白字白底，選取可見) */
+        .ans-value {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #ffffff;
+            border: 1px dashed #ced4da;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            user-select: text;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        /* 滑鼠移至題目區塊時，答案自動顯示 */
+        .question-card:hover .ans-value {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-color: #a5d6a7;
+        }
+
+        /* 反白選取時的強制視覺修正（防某些瀏覽器選取仍不清楚） */
+        .ans-value::selection {
+            background: #212529;
+            color: #ffffff;
+        }
+
+        /* 易錯標記視覺提示 */
+        .question-card.flagged {
+            background-color: var(--flagged-bg);
+            border-color: var(--flagged-border);
+        }
+
+        .question-card.flagged .flag-btn {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .question-card.flagged .ans-value {
+            background-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .question-card.flagged:hover .ans-value {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Corporate Finance, 12e (Ross)</h1>
+        <div class="meta-info">
+            <strong>科目章節：</strong> Chapter 24 Warrants and Convertibles | <strong>測驗題型：</strong> 單選題 (1 - 31) |
+            <strong>複習日期：</strong> 2026年6月8日
+        </div>
+        <div class="controls">
+            <div>
+                <button class="filter-btn active" id="btn-all" onclick="filterQuestions('all')">全部題目</button>
+                <button class="filter-btn" id="btn-flagged" onclick="filterQuestions('flagged')">已標記易錯題</button>
+            </div>
+            <div class="stats">
+                已標記易錯題數：<span id="flag-count">0</span> / 31
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="quiz-box">
+    </div>
+
+    <script>
+        // 原始題庫數據 (1-31題)
+        const quizData = [
+            { id: 1, q: "A warrant bestows on its owner the:", ans: "B", opts: ["A) obligation to sell securities directly to the issuer at a fixed price for a stated period of time.", "B) right to purchase securities directly from the issuer at a fixed price for a stated period of time.", "C) obligation to purchase securities directly from the issuer at a fixed price for a stated period of time.", "D) right to sell securities directly to the issuer at a fixed price for a stated period of time.", "E) right to sell securities directly to the issuer at the prior day's closing price for a stated period of time."] },
+            { id: 2, q: "Warrants are most often issued in combination with new:", ans: "C", opts: ["A) publicly placed shares of common stock.", "B) privately placed shares of common stock.", "C) publicly placed bonds.", "D) privately placed bonds.", "E) shares of preferred stock."] },
+            { id: 3, q: "The lower limit of a warrant's value is defined as:", ans: "C", opts: ["A) zero.", "B) MIN(0, Exercise price - Stock price).", "C) MAX(0, Stock price - Exercise price).", "D) MAX(0, Exercise price - Stock price).", "E) MIN(0, Stock price - Exercise price)."] },
+            { id: 4, q: "The upper limit of a warrant's value is best defined as the:", ans: "C", opts: ["A) exercise price.", "B) MAX(0, Stock price - Exercise price).", "C) underlying stock price.", "D) MAX(0, Exercise price - Stock price).", "E) MIN(0, Stock price - Exercise price)."] },
+            { id: 5, q: "Which one of the following is least apt to affect the value of a warrant?", ans: "E", opts: ["A) Exercise price", "B) Underlying stock price", "C) Risk-free interest rate", "D) Variance of underlying stock returns", "E) Market rate of return"] },
+            { id: 6, q: "Bright View Windows issued warrants with an exercise price of $17. Bright View's common stock currently sells for $16 per share. The warrants are:", ans: "B", opts: ["A) in the money.", "B) out of the money.", "C) valuable.", "D) not very valuable.", "E) both in the money and valuable."] },
+            { id: 7, q: "Which one of these features applies to call options but not to warrants?", ans: "D", opts: ["A) Market value that changes", "B) Value based on underlying asset", "C) Absolute minimum value of zero", "D) Issued by individuals", "E) Exercise price"] },
+            { id: 8, q: "Which one of the following occurs whenever a warrant is exercised?", ans: "B", opts: ["A) The issuer receives the greater of the exercise price or the stock price", "B) The number of shares outstanding increases", "C) Currently outstanding shares are exchanged between individual shareholders", "D) A new warrant is issued to replace the exercised warrant", "E) The issuer pays the lower of the exercise price or the stock price"] },
+            { id: 9, q: "Warrants generally:", ans: "E", opts: ["A) cannot be detached.", "B) expire within 30 days.", "C) remain attached to their original security until the expiration date.", "D) increase in value when the underlying stock price decreases.", "E) have longer maturity periods than calls."] },
+            { id: 10, q: "Concerning warrants and call options, which one of the following statements generally is correct?", ans: "D", opts: ["A) The issue procedures for both are quite similar.", "B) When a call option is exercised, the firm must issue new stock.", "C) When a warrant is exercised, existing stock changes hands.", "D) Exercise of a call option does not affect share value but warrant exercise does.", "E) The issuance of a call option generally decreases share value."] },
+            { id: 11, q: "Which one of the following would harm the financial position of a warrant holder?", ans: "C", opts: ["A) A 3-for-1 stock split", "B) A 20 percent stock dividend", "C) A large cash dividend", "D) A listing of the warrants on the NYSE", "E) A reverse stock split"] },
+            { id: 12, q: "The gain from exercising a warrant is ________ the gain from exercising a comparable call option.", ans: "A", opts: ["A) less than", "B) generally greater than", "C) always greater than", "D) equal to", "E) either equal to or greater than"] },
+            { id: 13, q: "The exercise of warrants creates new shares which:", ans: "B", opts: ["A) increases the total number of shares but does not affect share value.", "B) increases the total number of shares and can reduce the per share value.", "C) does not change the number of shares outstanding, similar to options.", "D) increases share value because cash is paid into the firm at the time of warrant exercise.", "E) increases the number of shares outstanding while maintaining the current price per share."] },
+            { id: 14, q: "The gain on a call is computed as:", ans: "C", opts: ["A) [Firm's value net of debt + Exercise price (Nw)] / (N + Nw)", "B) [Firm's value net of debt + Exercise price (Nw)] / N", "C) Firm's value net of debt / N - Exercise price", "D) Firm's value net of debt / (N + Nw) - Exercise price", "E) (Firm's value net of debt - Exercise price) / N"] },
+            { id: 15, q: "The gain on a warrant is computed as:", ans: "E", opts: ["A) {[Firm's value net of debt + Exercise price (Nw)] / (N + Nw)} - Exercise price", "B) [Firm's value net of debt + Exercise price (Nw)] / N - Exercise price", "C) Firm's value net of debt / N - Exercise price", "D) Firm's value net of debt / (N + Nw) - Exercise price", "E) (Firm's value net of debt - Exercise price) / (N + Nw)"] },
+            { id: 16, q: "The gain on a warrant compared to the gain on a similar call is expressed as:", ans: "B", opts: ["A) (N + Nw) / N", "B) N / (N + Nw)", "C) Nw / (N + Nw)", "D) Nw / N", "E) 1 + (Nw / N)"] },
+            { id: 17, q: "If a corporate security can be exchanged for a fixed number of shares of stock, the security is said to be:", ans: "B", opts: ["A) callable.", "B) convertible.", "C) protected.", "D) putable.", "E) inflated."] },
+            { id: 18, q: "A convertible preferred stock is similar to a convertible bond except that:", ans: "C", opts: ["A) the conversion ratio is fixed.", "B) the conversion price is fixed.", "C) the time to maturity is infinite.", "D) preferred stock converts to common stock while bonds convert to preferred stock.", "E) preferred stock converts to bonds while bonds convert to common stock."] },
+            { id: 19, q: "The holder of a $1,000 face value bond has the right to exchange the bond any time prior to maturity for shares of stock priced at $50 per share. The $50 is called the:", ans: "A", opts: ["A) conversion price.", "B) stated price.", "C) exercise price.", "D) striking price.", "E) par value."] },
+            { id: 20, q: "Concerning convertible bonds, which one of these statements is false?", ans: "C", opts: ["A) The value of a convertible bond can be greater than its straight bond value.", "B) The value of a convertible bond may be greater than its conversion value.", "C) A convertible bond can be separated into two distinct securities.", "D) The coupon rate on a nonconvertible bond will generally exceed the coupon rate on an otherwise identical convertible bond.", "E) An increase in the conversion price lowers the conversion ratio."] },
+            { id: 21, q: "A convertible bond has an option value equal to the market value of the convertible bond minus the:", ans: "D", opts: ["A) straight bond value.", "B) conversion value.", "C) conversion premium.", "D) maximum of the straight bond value or conversion value.", "E) minimum of the conversion value or the straight bond value."] },
+            { id: 22, q: "A firm has experienced a significant increase in its share value. In retrospect, which one of the following securities would generally have provided the most benefit to the firm assuming the securities had been issued prior to the change in share value?", ans: "C", opts: ["A) Bonds with attached warrants", "B) Convertible preferred stock", "C) Straight bonds", "D) Convertible bonds", "E) Common stock"] },
+            { id: 23, q: "A firm has experienced a significant decrease in its share value. In retrospect, which one of the following securities would generally have provided the most benefit to the firm assuming the securities had been issued prior to the change in share value?", ans: "E", opts: ["A) Bonds with attached warrants", "B) Convertible preferred stock", "C) Straight bonds", "D) Convertible bonds", "E) Common stock"] },
+            { id: 24, q: "A convertible bond:", ans: "A", opts: ["A) generally has fewer restrictive covenants than an otherwise identical nonconvertible bond.", "B) is generally issued with a higher coupon than a comparable non-convertible bond.", "C) provides a greater benefit to its issuer than a straight bond if the underlying stock price rises in the future.", "D) retains its option value even after the bond matures.", "E) tends to increase agency costs."] },
+            { id: 25, q: "Convertible bonds:", ans: "D", opts: ["A) are secured by shares of common stock.", "B) require conversion on or before the bond's maturity date.", "C) grant the owner the option of receiving either cash or shares of stock on conversion.", "D) are generally issued by firms that have lower bond ratings than the average firm.", "E) are generally granted seniority over all other bonds."] },
+            { id: 26, q: "Assume a firm issues convertible bonds at a time when the risk of the firm is difficult to properly assess. If the firm is subsequently determined to have low risk, then the:", ans: "A", opts: ["A) straight bond component of the convertible bond will have high value.", "B) bond should be immediately converted.", "C) conversion value will always exceed the straight bond value.", "D) call option of the convertible bond will have high value.", "E) the firm will eliminate the conversion option."] },
+            { id: 27, q: "Issuing convertible bonds or bonds with warrants is useful for a company of unknown risk because:", ans: "A", opts: ["A) risk affects the two value components of these securities in opposing ways.", "B) if the firm turns out to be high risk, both the option premium and the straight bond value will be high.", "C) generally only well-established, high-grade companies issue these instruments.", "D) the equity value is dependent on current risks rather than future risks.", "E) these securities generally carry significant restrictive covenants."] },
+            { id: 28, q: "Transfer or expropriation of wealth from bondholders to stockholders is less likely to occur when:", ans: "B", opts: ["A) subordinated straight debt is issued because the senior bondholders provide protection for the subordinated bondholders.", "B) convertible debt is issued because the equity component will reduce agency costs.", "C) convertible debt is issued because the holders can more readily sue when a high-risk project is undertaken.", "D) subordinated debt is issued because monitoring is much easier when subordinated straight debt is issued.", "E) straight debt is issued because there is a clearer distinction between creditors and shareholders."] },
+            { id: 29, q: "Assuming market efficiency, which one of these is the least sensible explanation of why convertibles and warrants are issued?", ans: "B", opts: ["A) Cash flows from these securities best match the cash flows of the firm.", "B) The firm is relatively large with a low level of financial leverage.", "C) The securities are useful when it is costly to assess the risk of the issuing firm.", "D) The securities may resolve agency problems associated with raising money.", "E) The issuer has a low bond rating."] },
+            { id: 30, q: "From the bondholder's point of view, the optimum time to convert a convertible bond is when the bond's conversion value is:", ans: "E", opts: ["A) less than the call price, but greater than the face value.", "B) greater than the call price, but less than the straight debt's value.", "C) equal to the face value.", "D) less than the straight debt's value, but greater than the call price.", "E) greater than the both the call value and straight bond value on the call date."] },
+            { id: 31, q: "Based on empirical studies, firms tend to call convertible bonds when the conversion value is:", ans: "C", opts: ["A) less than the conversion price.", "B) greater than the straight bond value.", "C) greater than the call price.", "D) less than the face value.", "E) equal to the straight bond value."] }
+        ];
+
+        let flaggedIds = JSON.parse(localStorage.getItem('ross_ch24_flagged')) || [];
+        let currentFilter = 'all';
+
+        // 初始化網頁與渲染題目
+        function initQuiz() {
+            const container = document.getElementById('quiz-box');
+            container.innerHTML = '';
+
+            quizData.forEach(item => {
+                const isFlagged = flaggedIds.includes(item.id);
+
+                const card = document.createElement('div');
+                card.className = `question-card ${isFlagged ? 'flagged' : ''}`;
+                card.id = `q-card-${item.id}`;
+                card.setAttribute('data-id', item.id);
+
+                // 建構選項HTML (兩欄格式)
+                let optionsHtml = '';
+                item.opts.forEach(opt => {
+                    optionsHtml += `<div class="option-item">${opt}</div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="flag-box">
+                        <button class="flag-btn" onclick="toggleFlag(${item.id})" title="標記為易錯題目">🏳</button>
+                    </div>
+                    <div class="q-number">Q${item.id}.</div>
+                    <div class="q-body">
+                        <div class="q-text">${item.q}</div>
+                        <div class="options-grid">${optionsHtml}</div>
+                    </div>
+                    <div class="ans-box">
+                        <span class="ans-label">答案 (懸停顯示)</span>
+                        <div class="ans-value">${item.ans}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateUI();
+        }
+
+        // 切換標記狀態
+        function toggleFlag(id) {
+            const index = flaggedIds.indexOf(id);
+            const card = document.getElementById(`q-card-${id}`);
+
+            if (index > -1) {
+                flaggedIds.splice(index, 1);
+                card.classList.remove('flagged');
+            } else {
+                flaggedIds.push(id);
+                card.classList.add('flagged');
+            }
+
+            localStorage.setItem('ross_ch24_flagged', JSON.stringify(flaggedIds));
+            updateUI();
+
+            // 如果目前在「已標記」篩選模式下，取消標記時應立即在畫面上隱藏
+            if (currentFilter === 'flagged' && index > -1) {
+                card.classList.add('hidden');
+            }
+        }
+
+        // 更新統計數據與控制介面
+        function updateUI() {
+            document.getElementById('flag-count').innerText = flaggedIds.length;
+        }
+
+        // 切換篩選過濾模式 (全部 / 已標記)
+        function filterQuestions(type) {
+            currentFilter = type;
+            document.getElementById('btn-all').classList.remove('active');
+            document.getElementById('btn-flagged').classList.remove('active');
+
+            if (type === 'all') {
+                document.getElementById('btn-all').classList.add('active');
+                quizData.forEach(item => {
+                    document.getElementById(`q-card-${item.id}`).classList.remove('hidden');
+                });
+            } else if (type === 'flagged') {
+                document.getElementById('btn-flagged').classList.add('active');
+                quizData.forEach(item => {
+                    const card = document.getElementById(`q-card-${item.id}`);
+                    if (flaggedIds.includes(item.id)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+        }
+
+        // 執行初始化
+        window.onload = initQuiz;
+    </script>
+</body>
+
+</html>

@@ -593,10 +593,63 @@ const questions = [
 ];
 
 let currentFilter = 'all';
-let flagged = JSON.parse(localStorage.getItem('ch19_flagged') || '[]');
+
+function readPersistentValue(storageKey) {
+  try {
+    const localValue = localStorage.getItem(storageKey);
+    if (localValue !== null) return localValue;
+  } catch (error) {}
+
+  try {
+    const sessionValue = sessionStorage.getItem(storageKey);
+    if (sessionValue !== null) return sessionValue;
+  } catch (error) {}
+
+  try {
+    const windowNameData = JSON.parse(window.name || '{}');
+    if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+      return windowNameData[storageKey];
+    }
+  } catch (error) {}
+
+  return '[]';
+}
+
+function writePersistentValue(storageKey, serializedValue) {
+  try {
+    localStorage.setItem(storageKey, serializedValue);
+    return;
+  } catch (error) {}
+
+  try {
+    sessionStorage.setItem(storageKey, serializedValue);
+    return;
+  } catch (error) {}
+
+  try {
+    const windowNameData = JSON.parse(window.name || '{}');
+    windowNameData[storageKey] = serializedValue;
+    window.name = JSON.stringify(windowNameData);
+  } catch (error) {}
+}
+
+function loadFlaggedList(storageKey) {
+  try {
+    const parsedValue = JSON.parse(readPersistentValue(storageKey));
+    return Array.isArray(parsedValue) ? parsedValue : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFlaggedList(storageKey, values) {
+  writePersistentValue(storageKey, JSON.stringify(values));
+}
+
+let flagged = loadFlaggedList('ch19_flagged');
 
 function saveFlagged() {
-  localStorage.setItem('ch19_flagged', JSON.stringify(flagged));
+  saveFlaggedList('ch19_flagged', flagged);
 }
 
 function updateFlagCount() {

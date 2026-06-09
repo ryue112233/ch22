@@ -316,7 +316,59 @@
         { id: 61, ans: "D", q: "The distribution of shares in a subsidiary to existing parent company stockholders is called a(n):", opts: ["A) lockup transaction.", "B) bear hug.", "C) equity carve-out.", "D) spin-off.", "E) split-up."] }
     ];
 
-    let flaggedQuestions = JSON.parse(localStorage.getItem('flagged_chapter29') || '[]');
+    function readPersistentValue(storageKey) {
+        try {
+            const localValue = localStorage.getItem(storageKey);
+            if (localValue !== null) return localValue;
+        } catch (error) {}
+
+        try {
+            const sessionValue = sessionStorage.getItem(storageKey);
+            if (sessionValue !== null) return sessionValue;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+                return windowNameData[storageKey];
+            }
+        } catch (error) {}
+
+        return '[]';
+    }
+
+    function writePersistentValue(storageKey, serializedValue) {
+        try {
+            localStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            sessionStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            windowNameData[storageKey] = serializedValue;
+            window.name = JSON.stringify(windowNameData);
+        } catch (error) {}
+    }
+
+    function loadFlaggedList(storageKey) {
+        try {
+            const parsedValue = JSON.parse(readPersistentValue(storageKey));
+            return Array.isArray(parsedValue) ? parsedValue : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveFlaggedList(storageKey, values) {
+        writePersistentValue(storageKey, JSON.stringify(values));
+    }
+
+    let flaggedQuestions = loadFlaggedList('flagged_chapter29');
     let currentFilter = 'all';
 
     // 渲染題目清單
@@ -391,7 +443,7 @@
         } else {
             flaggedQuestions.push(id);
         }
-        localStorage.setItem('flagged_chapter29', JSON.stringify(flaggedQuestions));
+        saveFlaggedList('flagged_chapter29', flaggedQuestions);
         renderQuestions();
     }
 

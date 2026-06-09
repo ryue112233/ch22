@@ -267,7 +267,59 @@
         { id: 24, ans: "E", q: "Which one of these statements is true?", opts: ["A) The Black-Scholes model is most applicable to complex situations.", "B) The binomial model is limited to a two-period time sequence.", "C) The binomial model is limited to ten time intervals for any single analysis.", "D) The binomial model is basically equivalent to the Black-Scholes model when there is a single time interval.", "E) The Black-Scholes model is simpler to use, but for complex situations, the binomial model is preferred."] }
     ];
 
-    let flaggedItems = JSON.parse(localStorage.getItem('cf_flagged_questions')) || [];
+    function readPersistentValue(storageKey) {
+        try {
+            const localValue = localStorage.getItem(storageKey);
+            if (localValue !== null) return localValue;
+        } catch (error) {}
+
+        try {
+            const sessionValue = sessionStorage.getItem(storageKey);
+            if (sessionValue !== null) return sessionValue;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+                return windowNameData[storageKey];
+            }
+        } catch (error) {}
+
+        return '[]';
+    }
+
+    function writePersistentValue(storageKey, serializedValue) {
+        try {
+            localStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            sessionStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            windowNameData[storageKey] = serializedValue;
+            window.name = JSON.stringify(windowNameData);
+        } catch (error) {}
+    }
+
+    function loadFlaggedList(storageKey) {
+        try {
+            const parsedValue = JSON.parse(readPersistentValue(storageKey));
+            return Array.isArray(parsedValue) ? parsedValue : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveFlaggedList(storageKey, values) {
+        writePersistentValue(storageKey, JSON.stringify(values));
+    }
+
+    let flaggedItems = loadFlaggedList('cf_flagged_questions');
     let currentFilter = 'all';
 
     function initQuiz() {
@@ -318,7 +370,7 @@
             btnEl.innerHTML = '🚩';
         }
 
-        localStorage.setItem('cf_flagged_questions', JSON.stringify(flaggedItems));
+        saveFlaggedList('cf_flagged_questions', flaggedItems);
         updateStats();
         
         if (currentFilter === 'flagged') {

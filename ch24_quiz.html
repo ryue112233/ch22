@@ -271,7 +271,59 @@
             { id: 31, q: "Based on empirical studies, firms tend to call convertible bonds when the conversion value is:", ans: "C", opts: ["A) less than the conversion price.", "B) greater than the straight bond value.", "C) greater than the call price.", "D) less than the face value.", "E) equal to the straight bond value."] }
         ];
 
-        let flaggedIds = JSON.parse(localStorage.getItem('ross_ch24_flagged')) || [];
+        function readPersistentValue(storageKey) {
+            try {
+                const localValue = localStorage.getItem(storageKey);
+                if (localValue !== null) return localValue;
+            } catch (error) {}
+
+            try {
+                const sessionValue = sessionStorage.getItem(storageKey);
+                if (sessionValue !== null) return sessionValue;
+            } catch (error) {}
+
+            try {
+                const windowNameData = JSON.parse(window.name || '{}');
+                if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+                    return windowNameData[storageKey];
+                }
+            } catch (error) {}
+
+            return '[]';
+        }
+
+        function writePersistentValue(storageKey, serializedValue) {
+            try {
+                localStorage.setItem(storageKey, serializedValue);
+                return;
+            } catch (error) {}
+
+            try {
+                sessionStorage.setItem(storageKey, serializedValue);
+                return;
+            } catch (error) {}
+
+            try {
+                const windowNameData = JSON.parse(window.name || '{}');
+                windowNameData[storageKey] = serializedValue;
+                window.name = JSON.stringify(windowNameData);
+            } catch (error) {}
+        }
+
+        function loadFlaggedList(storageKey) {
+            try {
+                const parsedValue = JSON.parse(readPersistentValue(storageKey));
+                return Array.isArray(parsedValue) ? parsedValue : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveFlaggedList(storageKey, values) {
+            writePersistentValue(storageKey, JSON.stringify(values));
+        }
+
+        let flaggedIds = loadFlaggedList('ross_ch24_flagged');
         let currentFilter = 'all';
 
         // 初始化網頁與渲染題目
@@ -326,7 +378,7 @@
                 card.classList.add('flagged');
             }
 
-            localStorage.setItem('ross_ch24_flagged', JSON.stringify(flaggedIds));
+            saveFlaggedList('ross_ch24_flagged', flaggedIds);
             updateUI();
 
             // 如果目前在「已標記」篩選模式下，取消標記時應立即在畫面上隱藏

@@ -351,8 +351,61 @@
     ];
 
     let currentFilter = 'all';
+
+    function readPersistentValue(storageKey) {
+        try {
+            const localValue = localStorage.getItem(storageKey);
+            if (localValue !== null) return localValue;
+        } catch (error) {}
+
+        try {
+            const sessionValue = sessionStorage.getItem(storageKey);
+            if (sessionValue !== null) return sessionValue;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+                return windowNameData[storageKey];
+            }
+        } catch (error) {}
+
+        return '[]';
+    }
+
+    function writePersistentValue(storageKey, serializedValue) {
+        try {
+            localStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            sessionStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            windowNameData[storageKey] = serializedValue;
+            window.name = JSON.stringify(windowNameData);
+        } catch (error) {}
+    }
+
+    function loadFlaggedList(storageKey) {
+        try {
+            const parsedValue = JSON.parse(readPersistentValue(storageKey));
+            return Array.isArray(parsedValue) ? parsedValue : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveFlaggedList(storageKey, values) {
+        writePersistentValue(storageKey, JSON.stringify(values));
+    }
+
     // 從 localStorage 讀取已標記的題號清單
-    let flaggedQuestions = JSON.parse(localStorage.getItem('flaggedOptionsQuestions')) || [];
+    let flaggedQuestions = loadFlaggedList('flaggedOptionsQuestions');
 
     // 初始化與渲染
     function init() {
@@ -423,7 +476,7 @@
         }
         
         // 儲存至 localStorage
-        localStorage.setItem('flaggedOptionsQuestions', JSON.stringify(flaggedQuestions));
+        saveFlaggedList('flaggedOptionsQuestions', flaggedQuestions);
         
         // 更新 UI 狀態
         updateStats();

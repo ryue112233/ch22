@@ -302,12 +302,64 @@
 
     let currentFilter = 'all';
 
+    function readPersistentValue(storageKey) {
+        try {
+            const localValue = localStorage.getItem(storageKey);
+            if (localValue !== null) return localValue;
+        } catch (error) {}
+
+        try {
+            const sessionValue = sessionStorage.getItem(storageKey);
+            if (sessionValue !== null) return sessionValue;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            if (windowNameData && Object.prototype.hasOwnProperty.call(windowNameData, storageKey)) {
+                return windowNameData[storageKey];
+            }
+        } catch (error) {}
+
+        return '[]';
+    }
+
+    function writePersistentValue(storageKey, serializedValue) {
+        try {
+            localStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            sessionStorage.setItem(storageKey, serializedValue);
+            return;
+        } catch (error) {}
+
+        try {
+            const windowNameData = JSON.parse(window.name || '{}');
+            windowNameData[storageKey] = serializedValue;
+            window.name = JSON.stringify(windowNameData);
+        } catch (error) {}
+    }
+
+    function loadFlaggedList(storageKey) {
+        try {
+            const parsedValue = JSON.parse(readPersistentValue(storageKey));
+            return Array.isArray(parsedValue) ? parsedValue : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveFlaggedList(storageKey, values) {
+        writePersistentValue(storageKey, JSON.stringify(values));
+    }
+
     // 初始化與讀取備忘狀態
     function initQuiz() {
         const container = document.getElementById('quiz-container');
         container.innerHTML = '';
-        
-        let flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+
+        let flaggedIds = loadFlaggedList('ross12e_flagged_questions');
 
         questionsData.forEach(item => {
             const isFlagged = flaggedIds.includes(item.id);
@@ -374,7 +426,7 @@
 
     // 切換旗標標記狀態
     function toggleFlag(id) {
-        let flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+        let flaggedIds = loadFlaggedList('ross12e_flagged_questions');
         const card = document.getElementById(`q-card-${id}`);
 
         if (flaggedIds.includes(id)) {
@@ -385,7 +437,7 @@
             card.classList.add('flagged');
         }
 
-        localStorage.setItem('ross12e_flagged_questions', JSON.stringify(flaggedIds));
+        saveFlaggedList('ross12e_flagged_questions', flaggedIds);
         updateCounter();
 
         if (currentFilter === 'flagged') {
@@ -395,7 +447,7 @@
 
     // 更新計數器
     function updateCounter() {
-        const flaggedIds = JSON.parse(localStorage.getItem('ross12e_flagged_questions')) || [];
+        const flaggedIds = loadFlaggedList('ross12e_flagged_questions');
         document.getElementById('flagged-count').innerText = flaggedIds.length;
     }
 
